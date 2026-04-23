@@ -1,0 +1,14 @@
+<?php
+namespace App\Security\Infrastructure\Doctrine;
+use App\Security\Domain\AdminUser;
+use App\Security\Domain\AdminUserRepository;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
+final class DoctrineAdminUserRepository extends ServiceEntityRepository implements AdminUserRepository, UserLoaderInterface
+{
+    public function __construct(ManagerRegistry $r) { parent::__construct($r, AdminUser::class); }
+    public function save(AdminUser $u): void { $this->getEntityManager()->persist($u); $this->getEntityManager()->flush(); }
+    public function findByEmail(string $email): ?AdminUser { return $this->findOneBy(['email' => $email]); }
+    public function loadUserByIdentifier(string $identifier): ?AdminUser { return $this->findByEmail($identifier); }
+}

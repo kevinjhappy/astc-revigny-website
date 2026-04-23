@@ -1,0 +1,35 @@
+{% extends "base_admin.html.twig" %}
+{% block title %}{{ tournament.name }}{% endblock %}
+{% block body %}
+  <h1>{{ tournament.name }}</h1>
+  <p>{{ tournament.startDate|date("d/m/Y") }} → {{ tournament.endDate|date("d/m/Y") }}</p>
+  <p>Type : <strong>{{ tournament.type.value }}</strong> — Statut : <strong>{{ tournament.status.value }}</strong> — Max : {{ tournament.maxParticipants }}</p>
+  {% if tournament.description %}<p>{{ tournament.description }}</p>{% endif %}
+  <a href="{{ path("admin_tournament_edit", {id: tournament.id}) }}" class="btn" style="background:#1A2B6D">Éditer</a>
+  {% if tournament.status.value == "DRAFT" %}
+    <form method="post" action="{{ path("admin_tournament_publish", {id: tournament.id}) }}" style="display:inline">
+      <input type="hidden" name="_token" value="{{ csrf_token("pub" ~ tournament.id) }}">
+      <button>Publier</button>
+    </form>
+  {% elseif tournament.status.value == "PUBLISHED" %}
+    <form method="post" action="{{ path("admin_tournament_close", {id: tournament.id}) }}" style="display:inline">
+      <input type="hidden" name="_token" value="{{ csrf_token("cls" ~ tournament.id) }}">
+      <button>Clôturer</button>
+    </form>
+  {% endif %}
+  <h2>Inscriptions ({{ registrations|length }})</h2>
+  <table>
+    <thead><tr><th>Nom</th><th>Prénom</th><th>Tél</th><th>Email</th><th>Statut</th><th>Date</th></tr></thead>
+    <tbody>
+    {% for r in registrations %}
+      <tr>
+        <td>{{ r.lastName }}</td><td>{{ r.firstName }}</td>
+        <td>{{ r.phone }}</td><td>{{ r.email }}</td>
+        <td>{{ r.status.value }}</td><td>{{ r.registeredAt|date("d/m/Y H:i") }}</td>
+      </tr>
+    {% else %}
+      <tr><td colspan="6">Aucune inscription.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

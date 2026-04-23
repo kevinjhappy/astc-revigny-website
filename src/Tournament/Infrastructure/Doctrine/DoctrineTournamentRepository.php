@@ -1,0 +1,26 @@
+<?php
+namespace App\Tournament\Infrastructure\Doctrine;
+use App\Shared\Domain\ValueObject\Uuid;
+use App\Tournament\Domain\Tournament;
+use App\Tournament\Domain\TournamentRepository;
+use App\Tournament\Domain\TournamentStatus;
+use Doctrine\ORM\EntityManagerInterface;
+final class DoctrineTournamentRepository implements TournamentRepository
+{
+    public function __construct(private EntityManagerInterface $em) {}
+    public function save(Tournament $t): void { $this->em->persist($t); $this->em->flush(); }
+    public function get(Uuid $id): ?Tournament
+    {
+        return $this->em->getRepository(Tournament::class)->findOneBy(['id' => (string)$id]);
+    }
+    public function all(): array
+    {
+        return $this->em->createQueryBuilder()->select('t')->from(Tournament::class, 't')
+            ->orderBy('t.startDate', 'DESC')->getQuery()->getResult();
+    }
+    public function published(): array
+    {
+        return $this->em->getRepository(Tournament::class)
+            ->findBy(['status' => TournamentStatus::PUBLISHED->value], ['startDate' => 'ASC']);
+    }
+}

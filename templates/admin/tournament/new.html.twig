@@ -1,0 +1,7 @@
+{% extends "base_admin.html.twig" %}
+{% block title %}Nouveau tournoi{% endblock %}
+{% block body %}
+  <h1>Nouveau tournoi</h1>
+  {{ form_start(form) }}{{ form_widget(form) }}<button type="submit">Créer</button>{{ form_end(form) }}
+  <a href="{{ path("admin_tournament_list") }}">← Retour</a>
+{% endblock %}

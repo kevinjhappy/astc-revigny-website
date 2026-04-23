@@ -1,0 +1,23 @@
+{% extends "base_admin.html.twig" %}
+{% block title %}Tournois{% endblock %}
+{% block body %}
+  <h1>Tournois</h1>
+  <a class="btn" href="{{ path("admin_tournament_new") }}">+ Nouveau tournoi</a>
+  <table style="margin-top:1rem">
+    <thead><tr><th>Nom</th><th>Début</th><th>Type</th><th>Statut</th><th>Max</th><th></th></tr></thead>
+    <tbody>
+    {% for t in tournaments %}
+      <tr>
+        <td>{{ t.name }}</td>
+        <td>{{ t.startDate|date("d/m/Y") }}</td>
+        <td>{{ t.type.value }}</td>
+        <td>{{ t.status.value }}</td>
+        <td>{{ t.maxParticipants }}</td>
+        <td><a href="{{ path("admin_tournament_detail", {id: t.id}) }}">Voir</a></td>
+      </tr>
+    {% else %}
+      <tr><td colspan="6">Aucun tournoi.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

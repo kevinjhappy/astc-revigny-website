@@ -4,7 +4,7 @@ namespace App\Member\Application\Query;
 use App\Member\Domain\MemberRepository;
 use App\Shared\Domain\ValueObject\PhoneNumber;
 
-final class MatchMemberHandler
+class MatchMemberHandler
 {
     public function __construct(private MemberRepository $repo) {}
 

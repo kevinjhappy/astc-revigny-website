@@ -1,0 +1,53 @@
+{% extends "base_admin.html.twig" %}
+{% block title %}Inscriptions{% endblock %}
+{% block body %}
+  <h1>Inscriptions</h1>
+  <form method="get" style="margin-bottom:1rem">
+    <select name="tournament">
+      <option value="">Tous tournois</option>
+      {% for t in tournaments %}
+        <option value="{{ t.id }}" {{ selectedTournament == t.id|string ? "selected" }}>{{ t.name }}</option>
+      {% endfor %}
+    </select>
+    <select name="status">
+      <option value="">Tous statuts</option>
+      {% for s in ["PENDING","CONFIRMED","CANCELLED","WAITING_LIST"] %}
+        <option value="{{ s }}" {{ selectedStatus == s ? "selected" }}>{{ s }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit">Filtrer</button>
+  </form>
+  <table>
+    <thead><tr><th>Date</th><th>Nom</th><th>Prénom</th><th>Tél</th><th>Email</th><th>Statut</th><th>Actions</th></tr></thead>
+    <tbody>
+    {% for r in registrations %}
+      <tr>
+        <td>{{ r.registeredAt|date("d/m/Y H:i") }}</td>
+        <td>{{ r.lastName }}</td><td>{{ r.firstName }}</td>
+        <td>{{ r.phone }}</td><td>{{ r.email }}</td>
+        <td>{{ r.status.value }}</td>
+        <td>
+          {% if r.status.value == "PENDING" %}
+            <form method="post" action="{{ path("admin_registration_confirm", {id: r.id}) }}" style="display:inline">
+              <input type="hidden" name="_token" value="{{ csrf_token("cnf" ~ r.id) }}">
+              <button>Confirmer</button>
+            </form>
+          {% endif %}
+          {% if r.status.value in ["PENDING","CONFIRMED","WAITING_LIST"] %}
+            <form method="post" action="{{ path("admin_registration_cancel", {id: r.id}) }}" style="display:inline">
+              <input type="hidden" name="_token" value="{{ csrf_token("can" ~ r.id) }}">
+              <button style="background:#E8721A">Annuler</button>
+            </form>
+          {% endif %}
+          <form method="post" action="{{ path("admin_registration_delete", {id: r.id}) }}" style="display:inline" onsubmit="return confirm('Supprimer ?')">
+            <input type="hidden" name="_token" value="{{ csrf_token("del" ~ r.id) }}">
+            <button style="background:#dc3545">Supprimer</button>
+          </form>
+        </td>
+      </tr>
+    {% else %}
+      <tr><td colspan="7">Aucune inscription.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
