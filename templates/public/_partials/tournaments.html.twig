@@ -1,0 +1,22 @@
+<section id="tournaments" data-aos="fade-up">
+  <h2>Tournois</h2>
+  <div class="divider"></div>
+  {% if tournaments|length == 0 %}
+    <p>Aucun tournoi publié pour le moment.</p>
+  {% else %}
+    <div class="tournaments-grid">
+      {% for t in tournaments %}
+        <article class="tournament-card" data-card>
+          <span class="badge {{ t.type == "MEMBERS_ONLY" ? "members" }}">
+            {{ t.type == "OPEN" ? "OUVERT" : "MEMBRES" }}
+          </span>
+          <h3>{{ t.name }}</h3>
+          <p>{{ t.startDate|date("d/m/Y") }} → {{ t.endDate|date("d/m/Y") }}</p>
+          {% if t.description %}<p>{{ t.description }}</p>{% endif %}
+          <p class="remaining">Places restantes : {{ max(0, t.max - t.confirmed) }} / {{ t.max }}</p>
+          <button class="btn" data-register="{{ t.id }}" data-type="{{ t.type }}" data-name="{{ t.name }}">S'inscrire</button>
+        </article>
+      {% endfor %}
+    </div>
+  {% endif %}
+</section>

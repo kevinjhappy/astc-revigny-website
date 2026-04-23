@@ -1,0 +1,14 @@
+<section id="gallery" class="gallery" data-aos="fade-up">
+  <div style="max-width:1200px;margin:0 auto;padding:5rem 2rem">
+    <h2 style="color:#fff">Galerie</h2>
+    <div class="divider" style="background:#E8721A"></div>
+    <div class="swiper gallery-swiper">
+      <div class="swiper-wrapper">
+        {% for n in 1..4 %}
+          <div class="swiper-slide"><img src="{{ asset("images/banniere.jpg") }}" alt="Photo du club {{ n }}"></div>
+        {% endfor %}
+      </div>
+      <div class="swiper-pagination"></div>
+    </div>
+  </div>
+</section>
