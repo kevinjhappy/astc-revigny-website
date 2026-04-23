@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Admin ASTC{% endblock %}</title>
+  <style>
+    body { font-family: system-ui; margin: 0; background: #f7f8fc; }
+    .admin-nav { background: #1A2B6D; color: #fff; padding: 1rem 2rem; display: flex; gap: 1.5rem; align-items: center; }
+    .admin-nav a { color: #fff; text-decoration: none; font-weight: 500; }
+    .admin-nav a:hover { color: #E8721A; }
+    .admin-main { padding: 2rem; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ddd; padding: 0.5rem 1rem; text-align: left; }
+    th { background: #1A2B6D; color: #fff; }
+    .btn { background: #E8721A; color: #fff; padding: 0.4rem 1rem; border-radius: 4px; text-decoration: none; }
+    input[type=text], input[type=email], select, textarea { border: 1px solid #ccc; padding: 0.4rem; border-radius: 4px; }
+    button { background: #1A2B6D; color: #fff; padding: 0.4rem 1rem; border: none; border-radius: 4px; cursor: pointer; }
+    .flash-success { background: #d4edda; border: 1px solid #c3e6cb; padding: 0.5rem 1rem; border-radius: 4px; margin-bottom: 1rem; }
+    .flash-error { background: #f8d7da; border: 1px solid #f5c6cb; padding: 0.5rem 1rem; border-radius: 4px; margin-bottom: 1rem; }
+  </style>
+</head>
+<body class="admin">
+  <header class="admin-nav">
+    <strong>ASTC Admin</strong>
+    <a href="{{ path("admin_dashboard") }}">Dashboard</a>
+    <a href="{{ path("admin_tournament_list") }}">Tournois</a>
+    <a href="{{ path("admin_member_list") }}">Membres</a>
+    <a href="{{ path("admin_registration_list") }}">Inscriptions</a>
+    <a href="{{ path("app_logout") }}">Déconnexion</a>
+  </header>
+  <main class="admin-main">
+    {% for msg in app.flashes("success") %}<div class="flash-success">{{ msg }}</div>{% endfor %}
+    {% for msg in app.flashes("error") %}<div class="flash-error">{{ msg }}</div>{% endfor %}
+    {% block body %}{% endblock %}
+  </main>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{% extends "base_admin.html.twig" %}
+{% block title %}Nouveau membre{% endblock %}
+{% block body %}
+  <h1>Nouveau membre</h1>
+  {{ form_start(form) }}
+  {{ form_widget(form) }}
+  <button type="submit">Créer</button>
+  {{ form_end(form) }}
+  <a href="{{ path("admin_member_list") }}">← Retour</a>
+{% endblock %}
