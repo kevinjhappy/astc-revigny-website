@@ -3,6 +3,6 @@
 up:      ; docker compose up -d
 down:    ; docker compose down
 sh:      ; docker compose exec php sh
-console: ; docker compose exec php php bin/console $(c)
-test:    ; docker compose exec php vendor/bin/phpunit
+console: ; docker compose exec php php bin/console $(CMD)
+test:    ; docker compose exec php php bin/phpunit --testdox
 install: ; docker compose exec php composer install
