@@ -1,0 +1,44 @@
+services:
+  php:
+    build: ./docker/php
+    volumes:
+      - ./:/var/www/app
+      - ./docker/php/php.ini:/usr/local/etc/php/conf.d/zz-custom.ini
+    depends_on:
+      - mysql
+      - mailpit
+    environment:
+      DATABASE_URL: "mysql://astc:astc@mysql:3306/astc?serverVersion=8.0"
+      MAILER_DSN: "smtp://mailpit:1025"
+      APP_ENV: dev
+
+  nginx:
+    image: nginx:1.27-alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/app:ro
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - php
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: astc
+      MYSQL_USER: astc
+      MYSQL_PASSWORD: astc
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - "8026:8025"
+      - "1026:1025"
+
+volumes:
+  mysql_data:
