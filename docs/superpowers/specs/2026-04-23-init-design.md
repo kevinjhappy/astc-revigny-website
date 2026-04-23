@@ -1,4 +1,4 @@
-# Spec — Initialisation du projet ASTC Révigny
+# Spec — Initialisation du projet ASTC Revigny
 
 **Date :** 2026-04-23
 **Statut :** Validé
@@ -7,7 +7,7 @@
 
 ## 1. Contexte
 
-Site web pour l'ASTC Révigny (AS Tennis Club Révigny), club de tennis local basé à Revigny-sur-Ornain (Meuse, 55).
+Site web pour l'ASTC Revigny (AS Tennis Club Revigny), club de tennis local basé à Revigny-sur-Ornain (Meuse, 55).
 
 Deux espaces distincts :
 - **Page publique** — one-page, UX soignée, présentation du club et inscriptions aux tournois

@@ -1,0 +1,75 @@
+<h2>Approche frontend — Page publique</h2>
+<p class="subtitle">Quel style de rendu et d'interactivité pour le one-page du club ?</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#1a1a2e;padding:16px;font-family:sans-serif;">
+      <div style="background:#16213e;border-radius:8px;padding:12px;color:#e0e0e0;">
+        <div style="height:6px;background:#0f3460;border-radius:4px;margin-bottom:10px;"></div>
+        <div style="display:flex;gap:8px;margin-bottom:10px;">
+          <div style="height:60px;flex:1;background:#0f3460;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#4fc3f7;font-size:11px;">🎾 Hero animé</div>
+          <div style="height:60px;flex:1;background:#0f3460;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#4fc3f7;font-size:11px;">Actualités</div>
+        </div>
+        <div style="height:30px;background:linear-gradient(90deg,#4fc3f7,#0f3460);border-radius:4px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;">Galerie photos interactive</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Twig + Alpine.js</h3>
+      <p>Rendu serveur (Symfony/Twig) + Alpine.js pour les micro-interactions (menus, sliders, animations légères). Pas de build complexe, très maintenable.</p>
+      <ul style="font-size:13px;color:#aaa;padding-left:16px;">
+        <li>✅ Stack 100% PHP-friendly</li>
+        <li>✅ SEO natif (rendu serveur)</li>
+        <li>✅ Déploiement simple</li>
+        <li>⚠️ Interactivité limitée vs SPA</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0d1117;padding:16px;font-family:sans-serif;">
+      <div style="background:#161b22;border-radius:8px;padding:12px;color:#c9d1d9;">
+        <div style="height:6px;background:#238636;border-radius:4px;margin-bottom:10px;"></div>
+        <div style="display:flex;gap:8px;margin-bottom:10px;">
+          <div style="height:60px;flex:1;background:#21262d;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#58a6ff;font-size:11px;">Hero vidéo</div>
+          <div style="height:60px;flex:1;background:#21262d;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#58a6ff;font-size:11px;">Tournois live</div>
+        </div>
+        <div style="height:30px;background:linear-gradient(90deg,#58a6ff,#238636);border-radius:4px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;">Composants React riches</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Symfony API + React/Next.js</h3>
+      <p>Symfony expose une API (REST ou API Platform), React/Next.js gère le front. Séparation totale front/back, composants riches, SSR possible.</p>
+      <ul style="font-size:13px;color:#aaa;padding-left:16px;">
+        <li>✅ UX très riche, animations fluides</li>
+        <li>✅ Architecture découplée</li>
+        <li>⚠️ Deux codebases à maintenir</li>
+        <li>⚠️ Complexité accrue pour un club local</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#1b2838;padding:16px;font-family:sans-serif;">
+      <div style="background:#2a3f5f;border-radius:8px;padding:12px;color:#e8d5b7;">
+        <div style="height:6px;background:#c8a951;border-radius:4px;margin-bottom:10px;"></div>
+        <div style="display:flex;gap:8px;margin-bottom:10px;">
+          <div style="height:60px;flex:1;background:#1e3a5f;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#f4c842;font-size:11px;">Hero full-screen</div>
+          <div style="height:60px;flex:1;background:#1e3a5f;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#f4c842;font-size:11px;">Scroll animé</div>
+        </div>
+        <div style="height:30px;background:linear-gradient(90deg,#c8a951,#1e3a5f);border-radius:4px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;">Twig + GSAP / Swiper</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Twig + GSAP/Swiper (premium UX)</h3>
+      <p>Rendu Symfony/Twig avec des librairies JS ciblées : GSAP pour les animations au scroll, Swiper pour la galerie photos, AOS pour les entrées d'éléments. UX haut de gamme sans SPA.</p>
+      <ul style="font-size:13px;color:#aaa;padding-left:16px;">
+        <li>✅ Résultat visuel impressionnant</li>
+        <li>✅ SEO natif conservé</li>
+        <li>✅ Stack maîtrisée côté PHP</li>
+        <li>⚠️ Quelques libs JS à apprendre</li>
+      </ul>
+    </div>
+  </div>
+
+</div>

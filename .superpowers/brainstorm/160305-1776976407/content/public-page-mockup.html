@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASTC Révigny — Mockup page publique</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', sans-serif; background: #f0f0f0; color: #1A2B6D; }
+
+  /* ── NAV ── */
+  nav {
+    background: #1A2B6D;
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,.35);
+  }
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .nav-logo img {
+    height: 44px;
+    border-radius: 4px;
+  }
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+  }
+  .nav-links a {
+    color: #cbd5e8;
+    text-decoration: none;
+    font-size: 13px;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    font-weight: 600;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: #E8721A; }
+  .nav-cta {
+    background: #E8721A;
+    color: #fff !important;
+    padding: 8px 18px;
+    border-radius: 6px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    height: 540px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: url('/images/banniere.jpg') center/cover no-repeat;
+    filter: brightness(.55);
+    transform: scale(1.05);
+  }
+  .hero-content {
+    position: relative;
+    text-align: center;
+    color: #fff;
+    padding: 0 24px;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: #E8721A;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 6px 18px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+  .hero-title {
+    font-family: Georgia, serif;
+    font-size: 52px;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 12px;
+    text-shadow: 0 2px 20px rgba(0,0,0,.6);
+  }
+  .hero-title span { color: #E8721A; }
+  .hero-sub {
+    font-size: 17px;
+    opacity: .88;
+    margin-bottom: 32px;
+    font-weight: 300;
+    letter-spacing: .5px;
+  }
+  .hero-btns { display: flex; gap: 14px; justify-content: center; }
+  .btn-primary {
+    background: #E8721A;
+    color: #fff;
+    padding: 14px 32px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 15px;
+    box-shadow: 0 4px 18px rgba(232,114,26,.5);
+    transition: transform .2s;
+  }
+  .btn-secondary {
+    background: rgba(255,255,255,.15);
+    color: #fff;
+    padding: 14px 32px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    border: 2px solid rgba(255,255,255,.5);
+    backdrop-filter: blur(4px);
+  }
+  .hero-scroll {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255,255,255,.6);
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .scroll-dot {
+    width: 6px; height: 6px;
+    background: #E8721A;
+    border-radius: 50%;
+    animation: bounce 1.4s infinite;
+  }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
+
+  /* ── SECTIONS ── */
+  section { padding: 72px 60px; }
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #E8721A;
+    margin-bottom: 10px;
+  }
+  .section-title {
+    font-family: Georgia, serif;
+    font-size: 36px;
+    color: #1A2B6D;
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+  .section-divider {
+    width: 48px;
+    height: 4px;
+    background: #E8721A;
+    border-radius: 2px;
+    margin-bottom: 32px;
+  }
+
+  /* ── LE CLUB ── */
+  .club-section { background: #fff; }
+  .club-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+  .club-text p {
+    color: #555;
+    line-height: 1.8;
+    margin-bottom: 16px;
+    font-size: 15px;
+  }
+  .club-stats {
+    display: flex;
+    gap: 28px;
+    margin-top: 24px;
+  }
+  .stat {
+    text-align: center;
+  }
+  .stat-number {
+    font-family: Georgia, serif;
+    font-size: 38px;
+    font-weight: 700;
+    color: #E8721A;
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 12px;
+    color: #888;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+  .club-image-placeholder {
+    background: linear-gradient(135deg, #1A2B6D 0%, #2d4a9e 100%);
+    border-radius: 16px;
+    height: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,.4);
+    font-size: 14px;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+  }
+  .club-image-placeholder::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('/images/banniere.jpg') center/cover;
+    opacity: .35;
+    border-radius: 16px;
+  }
+  .club-image-placeholder span { position: relative; z-index: 1; }
+
+  /* ── TOURNOIS ── */
+  .tournois-section { background: #f7f8fc; }
+  .tournois-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 8px;
+  }
+  .tournoi-card {
+    background: #fff;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 16px rgba(26,43,109,.08);
+    transition: transform .2s, box-shadow .2s;
+    cursor: pointer;
+  }
+  .tournoi-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 32px rgba(26,43,109,.15);
+  }
+  .tournoi-header {
+    padding: 20px 20px 16px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .tournoi-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+  }
+  .badge-open { background: #e8f5e9; color: #2e7d32; }
+  .badge-members { background: #fff3e0; color: #e65100; }
+  .tournoi-name {
+    font-family: Georgia, serif;
+    font-size: 18px;
+    color: #1A2B6D;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .tournoi-date {
+    font-size: 13px;
+    color: #888;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tournoi-body { padding: 16px 20px 20px; }
+  .tournoi-info {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+  .tournoi-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    background: #f7f8fc;
+    border-top: 1px solid #eee;
+  }
+  .places-left { font-size: 12px; color: #888; }
+  .places-left strong { color: #E8721A; }
+  .btn-inscrit {
+    background: #E8721A;
+    color: #fff;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .btn-inscrit-disabled {
+    background: #1A2B6D;
+    color: #fff;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  /* ── GALERIE ── */
+  .galerie-section { background: #1A2B6D; }
+  .galerie-section .section-title { color: #fff; }
+  .galerie-section .section-label { color: #E8721A; }
+  .galerie-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-rows: 160px 160px;
+    gap: 12px;
+    margin-top: 8px;
+  }
+  .galerie-item {
+    background: rgba(255,255,255,.08);
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+  }
+  .galerie-item.large { grid-row: span 2; }
+  .galerie-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: .8;
+    transition: opacity .3s, transform .4s;
+  }
+  .galerie-item:hover img { opacity: 1; transform: scale(1.04); }
+  .galerie-placeholder {
+    width: 100%;
+    height: 100%;
+    background: rgba(255,255,255,.06);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,.3);
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+
+  /* ── CONTACT ── */
+  .contact-section { background: #fff; }
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+  .contact-info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .contact-icon {
+    width: 40px;
+    height: 40px;
+    background: #fff3e8;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .contact-label { font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+  .contact-value { font-size: 15px; color: #1A2B6D; font-weight: 600; }
+  .fb-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #1877f2;
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 14px;
+    margin-top: 8px;
+  }
+  .map-placeholder {
+    background: #e8ecf5;
+    border-radius: 14px;
+    height: 240px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    font-size: 13px;
+    border: 2px dashed #c8d0e8;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #111828;
+    color: rgba(255,255,255,.5);
+    text-align: center;
+    padding: 24px 40px;
+    font-size: 13px;
+  }
+  footer span { color: #E8721A; }
+
+  /* ── MODALE INSCRIPTION ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10,18,40,.75);
+    backdrop-filter: blur(6px);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal {
+    background: #fff;
+    border-radius: 18px;
+    width: 440px;
+    padding: 36px;
+    position: relative;
+    box-shadow: 0 24px 80px rgba(0,0,0,.3);
+  }
+  .modal-close {
+    position: absolute;
+    top: 16px;
+    right: 18px;
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    color: #aaa;
+  }
+  .modal-badge {
+    display: inline-block;
+    background: #fff3e0;
+    color: #e65100;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+  }
+  .modal-title {
+    font-family: Georgia, serif;
+    font-size: 22px;
+    color: #1A2B6D;
+    margin-bottom: 6px;
+  }
+  .modal-subtitle {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 24px;
+  }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+  .form-group { margin-bottom: 14px; }
+  .form-group label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: #1A2B6D;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .form-group input {
+    width: 100%;
+    padding: 11px 14px;
+    border: 2px solid #e8ecf5;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #1A2B6D;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .form-group input:focus { border-color: #E8721A; }
+  .optional-tag { color: #aaa; font-weight: 400; font-size: 10px; }
+  .member-notice {
+    background: #fff3e8;
+    border-left: 4px solid #E8721A;
+    border-radius: 0 8px 8px 0;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: #a0450a;
+    margin-bottom: 18px;
+  }
+  .btn-submit {
+    width: 100%;
+    background: #E8721A;
+    color: #fff;
+    border: none;
+    padding: 14px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <img src="/images/Logo.png" alt="ASTC Révigny">
+  </div>
+  <ul class="nav-links">
+    <li><a href="#club">Le club</a></li>
+    <li><a href="#tournois">Tournois</a></li>
+    <li><a href="#galerie">Galerie</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#tournois" class="nav-cta">S'inscrire</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-badge">🎾 Revigny-sur-Ornain</div>
+    <h1 class="hero-title">Bienvenue à<br><span>ASTC Révigny</span></h1>
+    <p class="hero-sub">Tennis Club — Compétitions, loisirs et convivialité</p>
+    <div class="hero-btns">
+      <a href="#tournois" class="btn-primary">Voir les tournois</a>
+      <a href="#club" class="btn-secondary">Découvrir le club</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-dot"></div>
+    Défiler
+  </div>
+</div>
+
+<!-- LE CLUB -->
+<section id="club" class="club-section">
+  <div class="section-label">Notre club</div>
+  <div class="section-title">Une passion partagée<br>pour le tennis</div>
+  <div class="section-divider"></div>
+  <div class="club-grid">
+    <div class="club-text">
+      <p>L'ASTC Révigny est un club de tennis convivial situé à Revigny-sur-Ornain. Ouvert à tous les niveaux, du débutant au compétiteur, nous offrons un cadre exceptionnel pour pratiquer votre sport favori.</p>
+      <p>Nos courts en terre battue, entourés de verdure, constituent un écrin idéal pour vous perfectionner, participer à des tournois ou simplement jouer entre amis.</p>
+      <div class="club-stats">
+        <div class="stat">
+          <div class="stat-number">4</div>
+          <div class="stat-label">Courts</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">160+</div>
+          <div class="stat-label">Membres</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">3</div>
+          <div class="stat-label">Tournois / an</div>
+        </div>
+      </div>
+    </div>
+    <div class="club-image-placeholder">
+      <span>Photo des courts</span>
+    </div>
+  </div>
+</section>
+
+<!-- TOURNOIS -->
+<section id="tournois" class="tournois-section">
+  <div class="section-label">Inscriptions ouvertes</div>
+  <div class="section-title">Nos tournois</div>
+  <div class="section-divider"></div>
+  <div class="tournois-grid">
+
+    <div class="tournoi-card">
+      <div class="tournoi-header">
+        <span class="tournoi-badge badge-open">Ouvert à tous</span>
+        <div class="tournoi-name">Tournoi Open 2026</div>
+        <div class="tournoi-date">📅 8 juin → 14 juillet 2026</div>
+      </div>
+      <div class="tournoi-body">
+        <div class="tournoi-info">Hommes · Femmes · Jeunes<br>De N/C à 30/4 — Toutes catégories</div>
+      </div>
+      <div class="tournoi-footer">
+        <div class="places-left">Places restantes : <strong>24</strong></div>
+        <button class="btn-inscrit" onclick="openModal('Tournoi Open 2026', false)">S'inscrire</button>
+      </div>
+    </div>
+
+    <div class="tournoi-card">
+      <div class="tournoi-header">
+        <span class="tournoi-badge badge-members">Membres uniquement</span>
+        <div class="tournoi-name">Championnat Interne</div>
+        <div class="tournoi-date">📅 15 → 30 septembre 2026</div>
+      </div>
+      <div class="tournoi-body">
+        <div class="tournoi-info">Réservé aux adhérents du club<br>Simple & double mixte</div>
+      </div>
+      <div class="tournoi-footer">
+        <div class="places-left">Places restantes : <strong>16</strong></div>
+        <button class="btn-inscrit" onclick="openModal('Championnat Interne', true)">S'inscrire</button>
+      </div>
+    </div>
+
+    <div class="tournoi-card">
+      <div class="tournoi-header">
+        <span class="tournoi-badge badge-open">Ouvert à tous</span>
+        <div class="tournoi-name">Tournoi Automne Jeunes</div>
+        <div class="tournoi-date">📅 12 → 19 octobre 2026</div>
+      </div>
+      <div class="tournoi-body">
+        <div class="tournoi-info">Catégories 11/12 ans · 13/14 ans<br>Esprit convivial et sportif</div>
+      </div>
+      <div class="tournoi-footer">
+        <div class="places-left">Places restantes : <strong>0</strong></div>
+        <button class="btn-inscrit-disabled" disabled>Complet</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- GALERIE -->
+<section id="galerie" class="galerie-section">
+  <div class="section-label">Nos courts & moments</div>
+  <div class="section-title">Galerie</div>
+  <div class="section-divider"></div>
+  <div class="galerie-grid">
+    <div class="galerie-item large">
+      <img src="/images/banniere.jpg" alt="Courts ASTC Révigny">
+    </div>
+    <div class="galerie-item"><div class="galerie-placeholder">📸 Photo 2</div></div>
+    <div class="galerie-item"><div class="galerie-placeholder">📸 Photo 3</div></div>
+    <div class="galerie-item"><div class="galerie-placeholder">📸 Photo 4</div></div>
+    <div class="galerie-item"><div class="galerie-placeholder">📸 Photo 5</div></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="contact-section">
+  <div class="section-label">Nous trouver</div>
+  <div class="section-title">Contact</div>
+  <div class="section-divider"></div>
+  <div class="contact-grid">
+    <div>
+      <div class="contact-info-item">
+        <div class="contact-icon">📍</div>
+        <div>
+          <div class="contact-label">Adresse</div>
+          <div class="contact-value">Revigny-sur-Ornain, Meuse (55)</div>
+        </div>
+      </div>
+      <div class="contact-info-item">
+        <div class="contact-icon">🎾</div>
+        <div>
+          <div class="contact-label">Club</div>
+          <div class="contact-value">AS Tennis Club Révigny</div>
+        </div>
+      </div>
+      <a href="#" class="fb-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        Suivre sur Facebook
+      </a>
+    </div>
+    <div class="map-placeholder">🗺️ Carte interactive (Google Maps embed)</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  © 2026 <span>ASTC Révigny</span> — Tous droits réservés · Site réalisé avec ❤️ pour le tennis
+</footer>
+
+<!-- MODALE INSCRIPTION -->
+<div class="modal-overlay hidden" id="modal-overlay" onclick="closeModalIfOutside(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-badge" id="modal-badge">Ouvert à tous</div>
+    <div class="modal-title" id="modal-title">Tournoi Open 2026</div>
+    <div class="modal-subtitle">Remplissez vos coordonnées pour vous inscrire</div>
+    <div id="member-notice" class="member-notice hidden">
+      🔒 Ce tournoi est réservé aux membres du club. Vos coordonnées seront vérifiées.
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Nom</label>
+        <input type="text" placeholder="Dupont">
+      </div>
+      <div class="form-group">
+        <label>Prénom</label>
+        <input type="text" placeholder="Marie">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Téléphone</label>
+      <input type="tel" placeholder="06 12 34 56 78">
+    </div>
+    <div class="form-group">
+      <label>Email <span class="optional-tag">(optionnel)</span></label>
+      <input type="email" placeholder="marie.dupont@email.fr">
+    </div>
+    <button class="btn-submit">Confirmer mon inscription</button>
+  </div>
+</div>
+
+<script>
+function openModal(name, membersOnly) {
+  document.getElementById('modal-title').textContent = name;
+  document.getElementById('modal-badge').textContent = membersOnly ? 'Membres uniquement' : 'Ouvert à tous';
+  document.getElementById('modal-badge').style.background = membersOnly ? '#fff3e0' : '#e8f5e9';
+  document.getElementById('modal-badge').style.color = membersOnly ? '#e65100' : '#2e7d32';
+  document.getElementById('member-notice').classList.toggle('hidden', !membersOnly);
+  document.getElementById('modal-overlay').classList.remove('hidden');
+}
+function closeModal() { document.getElementById('modal-overlay').classList.add('hidden'); }
+function closeModalIfOutside(e) { if (e.target === document.getElementById('modal-overlay')) closeModal(); }
+</script>
+
+</body>
+</html>

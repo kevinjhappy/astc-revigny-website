@@ -1,0 +1,68 @@
+<h2>Architecture — 3 approches DDD avec Symfony</h2>
+<p class="subtitle">Les décisions stack sont prises. La question est : comment structurer le DDD ?</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#1a2b6d;padding:16px;font-family:monospace;font-size:11px;color:#a8c8ff;">
+      <div style="color:#f4c842;margin-bottom:6px;font-weight:bold;">src/</div>
+      <div style="padding-left:12px;color:#e8721a;">Tournament/</div>
+      <div style="padding-left:24px;">Domain/ Entity/ Repository/ Service/</div>
+      <div style="padding-left:24px;">Application/ Command/ Query/ Handler/</div>
+      <div style="padding-left:24px;">Infrastructure/ Doctrine/ Controller/</div>
+      <div style="padding-left:12px;color:#e8721a;">Member/</div>
+      <div style="padding-left:24px;">Domain/ Application/ Infrastructure/</div>
+      <div style="padding-left:12px;color:#e8721a;">Registration/</div>
+      <div style="padding-left:24px;">Domain/ Application/ Infrastructure/</div>
+    </div>
+    <div class="card-body">
+      <h3>A — DDD Bounded Contexts complets ✅ Recommandé</h3>
+      <p>3 contextes isolés : <strong>Tournament</strong>, <strong>Member</strong>, <strong>Registration</strong>. Chaque contexte a son Domain, Application (CQRS léger), et Infrastructure. Communication par événements Symfony.</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul><li>SOLID respecté</li><li>Testabilité maximale</li><li>Évolutif</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Plus verbeux au départ</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#1a2b6d;padding:16px;font-family:monospace;font-size:11px;color:#a8c8ff;">
+      <div style="color:#f4c842;margin-bottom:6px;font-weight:bold;">src/</div>
+      <div style="padding-left:12px;">Entity/ Tournament.php Member.php</div>
+      <div style="padding-left:12px;">Repository/ TournamentRepo.php</div>
+      <div style="padding-left:12px;">Service/ TournamentService.php</div>
+      <div style="padding-left:12px;">Controller/ PublicController.php</div>
+      <div style="padding-left:12px;">Controller/ AdminController.php</div>
+      <div style="padding-left:12px;color:#888;">Form/ EventSubscriber/ ...</div>
+    </div>
+    <div class="card-body">
+      <h3>B — Structure Symfony classique</h3>
+      <p>Organisation par type technique (Entity, Repository, Service, Controller). Moins de fichiers, plus rapide à démarrer. Pas de séparation Domain/Application/Infrastructure.</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul><li>Familier Symfony</li><li>Moins de fichiers</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Difficile à faire évoluer</li><li>Moins SOLID</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#1a2b6d;padding:16px;font-family:monospace;font-size:11px;color:#a8c8ff;">
+      <div style="color:#f4c842;margin-bottom:6px;font-weight:bold;">src/</div>
+      <div style="padding-left:12px;color:#e8721a;">Tournament/ Member/ Registration/</div>
+      <div style="padding-left:24px;color:#a8c8ff;">Domain/ (Entity, VO, Events)</div>
+      <div style="padding-left:24px;color:#a8c8ff;">Application/ (UseCase, DTO)</div>
+      <div style="padding-left:24px;color:#a8c8ff;">Infrastructure/ (Doctrine, Ctrl)</div>
+      <div style="padding-left:12px;color:#e8721a;">Shared/</div>
+      <div style="padding-left:24px;">ValueObjects/ DomainEvent/ Bus/</div>
+    </div>
+    <div class="card-body">
+      <h3>C — DDD + Shared Kernel + Event Bus</h3>
+      <p>Comme A mais avec un <strong>Shared Kernel</strong> pour les Value Objects communs (PhoneNumber, Email) et un Event Bus explicite entre contextes. Full Hexagonal Architecture.</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul><li>Architecture la plus propre</li><li>DDD strict</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Complexité élevée</li><li>Overkill pour ce périmètre</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+</div>

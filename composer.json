@@ -39,7 +39,13 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/"
+            "App\\": "src/",
+            "App\\Tournament\\": "src/Tournament/",
+            "App\\Member\\": "src/Member/",
+            "App\\Registration\\": "src/Registration/",
+            "App\\Security\\": "src/Security/",
+            "App\\Shared\\": "src/Shared/",
+            "App\\Public\\": "src/Public/"
         }
     },
     "autoload-dev": {
