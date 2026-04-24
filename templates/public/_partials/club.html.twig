@@ -1,15 +1,33 @@
-<section id="club" data-aos="fade-up">
-  <h2>Le club</h2>
-  <div class="divider"></div>
-  <div class="club">
-    <div>
-      <p>Fondé en 1978, l'ASTC Revigny réunit passionnés et compétiteurs autour de courts couverts et extérieurs en plein cœur de Revigny-sur-Ornain.</p>
-      <div class="club-stats">
-        <div class="stat"><strong>4</strong>Courts</div>
-        <div class="stat"><strong>300+</strong>Membres</div>
-        <div class="stat"><strong>3</strong>Tournois/an</div>
+<section id="club" class="section" data-aos="fade-up">
+  <div class="container">
+    <span class="section-eyebrow">Le Club</span>
+    <h2 class="section-title">Notre histoire</h2>
+    <div class="divider"></div>
+    <div class="club-grid">
+      <div class="club-text">
+        <p>Fondé en 1978, l'ASTC Revigny réunit passionnés et compétiteurs autour de courts couverts et extérieurs en plein cœur de Revigny-sur-Ornain.</p>
+        <p>Venez partager votre passion du tennis dans un cadre convivial et sportif, ouvert à tous les niveaux, des débutants aux compétiteurs.</p>
+        <div class="club-stats">
+          <div class="stat" data-aos="zoom-in" data-aos-delay="0">
+            <strong class="stat__number">4</strong>
+            <span class="stat__label">Courts</span>
+          </div>
+          <div class="stat" data-aos="zoom-in" data-aos-delay="100">
+            <strong class="stat__number">300+</strong>
+            <span class="stat__label">Membres</span>
+          </div>
+          <div class="stat" data-aos="zoom-in" data-aos-delay="200">
+            <strong class="stat__number">3</strong>
+            <span class="stat__label">Tournois / an</span>
+          </div>
+        </div>
+      </div>
+      <div class="club-image" data-aos="fade-left" data-aos-delay="100">
+        <div class="club-image__frame" aria-hidden="true"></div>
+        <img src="{{ asset('images/banniere.jpg') }}"
+             alt="Courts de tennis de l'ASTC Revigny"
+             loading="lazy">
       </div>
     </div>
-    <img src="{{ asset("images/banniere.jpg") }}" alt="Courts ASTC Revigny" style="width:100%;border-radius:8px">
   </div>
 </section>

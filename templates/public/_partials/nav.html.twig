@@ -1,13 +1,28 @@
-<nav class="nav">
-  <a class="logo" href="#hero">
-    <img src="{{ asset('images/Logo.png') }}" alt="ASTC Revigny" height="40">
+<nav class="nav" id="main-nav" aria-label="Navigation principale">
+  <a class="nav__logo" href="#hero" aria-label="ASTC Revigny — Accueil">
+    <img src="{{ asset('images/Logo.png') }}" alt="ASTC Revigny" height="42">
   </a>
-  <ul>
+  <ul class="nav__links" role="list">
     <li><a href="#club">Le club</a></li>
     <li><a href="#tournaments">Tournois</a></li>
     <li><a href="#gallery">Galerie</a></li>
     <li><a href="#membership">Adhésion</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
-  <a class="btn" href="#membership">Devenir membre</a>
+  <div style="display:flex;align-items:center;margin-left:auto">
+    <a class="btn btn--primary nav__cta" href="#membership">Devenir membre</a>
+    <button class="nav__hamburger" id="nav-hamburger"
+            aria-expanded="false" aria-controls="nav-drawer" aria-label="Ouvrir le menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
 </nav>
+
+<div class="nav__drawer" id="nav-drawer" role="navigation" aria-label="Menu mobile">
+  <a href="#club">Le club</a>
+  <a href="#tournaments">Tournois</a>
+  <a href="#gallery">Galerie</a>
+  <a href="#membership">Adhésion</a>
+  <a href="#contact">Contact</a>
+  <a class="btn btn--primary" href="#membership">Devenir membre</a>
+</div>
