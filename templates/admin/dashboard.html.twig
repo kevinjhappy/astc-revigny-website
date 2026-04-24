@@ -2,17 +2,17 @@
 {% block title %}Dashboard{% endblock %}
 {% block body %}
   <h1>Dashboard</h1>
-  <div class="stats" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem">
-    <div style="background:#fff;padding:1.5rem;border-radius:6px;text-align:center">
-      <div style="font-size:2rem;font-weight:700;color:#E8721A">{{ activeTournaments }}</div>
+  <div class="dashboard-stats">
+    <div class="stat-card">
+      <div class="value">{{ activeTournaments }}</div>
       <div>Tournois actifs</div>
     </div>
-    <div style="background:#fff;padding:1.5rem;border-radius:6px;text-align:center">
-      <div style="font-size:2rem;font-weight:700;color:#E8721A">{{ totalMembers }}</div>
+    <div class="stat-card">
+      <div class="value">{{ totalMembers }}</div>
       <div>Membres</div>
     </div>
-    <div style="background:#fff;padding:1.5rem;border-radius:6px;text-align:center">
-      <div style="font-size:2rem;font-weight:700;color:#E8721A">{{ totalRegistrations }}</div>
+    <div class="stat-card">
+      <div class="value">{{ totalRegistrations }}</div>
       <div>Inscriptions</div>
     </div>
   </div>
