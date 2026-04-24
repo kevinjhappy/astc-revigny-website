@@ -63,6 +63,18 @@ class Tournament
         $this->status = TournamentStatus::CLOSED;
     }
 
+    public function reopen(): void
+    {
+        if ($this->status !== TournamentStatus::CLOSED) throw new \DomainException('only CLOSED can be reopened');
+        $this->status = TournamentStatus::PUBLISHED;
+    }
+
+    public function unpublish(): void
+    {
+        if ($this->status !== TournamentStatus::PUBLISHED) throw new \DomainException('only PUBLISHED can be unpublished');
+        $this->status = TournamentStatus::DRAFT;
+    }
+
     public function id(): Uuid { return $this->id; }
     public function name(): string { return $this->name; }
     public function startDate(): \DateTimeImmutable { return $this->startDate; }

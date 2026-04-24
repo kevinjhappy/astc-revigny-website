@@ -14,9 +14,11 @@ final class UpdateMemberHandler
     {
         $m = $this->repo->get(Uuid::fromString($c->id))
             ?? throw new \DomainException('Member not found');
+        $birthDate = $c->birthDate ? \DateTimeImmutable::createFromFormat('d/m/Y', $c->birthDate) ?: null : null;
         $m->update($c->lastName, $c->firstName,
             PhoneNumber::fromString($c->phone),
-            $c->email ? Email::fromString($c->email) : null);
+            $c->email ? Email::fromString($c->email) : null,
+            $birthDate);
         $this->repo->save($m);
     }
 }

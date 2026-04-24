@@ -99,12 +99,46 @@
     {% for msg in app.flashes('error') %}<div class="flash-error">{{ msg }}</div>{% endfor %}
     {% block body %}{% endblock %}
   </main>
+  <!-- Confirmation modal -->
+  <div id="confirm-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9000;align-items:center;justify-content:center;padding:1rem">
+    <div style="background:#fff;padding:1.5rem 2rem;border-radius:8px;max-width:420px;width:100%;box-shadow:0 8px 32px rgba(0,0,0,.25)">
+      <p id="confirm-msg" style="margin:0 0 1.5rem;font-size:1rem;color:#222;line-height:1.5"></p>
+      <div style="display:flex;gap:.75rem;justify-content:flex-end;flex-wrap:wrap">
+        <button type="button" onclick="closeConfirm()" style="background:#6c757d">Annuler</button>
+        <button type="button" id="confirm-ok" style="background:#dc3545">Confirmer</button>
+      </div>
+    </div>
+  </div>
+
   <script>
+    // Auto-wrap tables
     document.querySelectorAll('table').forEach(function(t) {
       var w = document.createElement('div');
       w.className = 'table-wrap';
       t.parentNode.insertBefore(w, t);
       w.appendChild(t);
+    });
+
+    // Confirmation modal
+    var _confirmForm = null;
+    document.addEventListener('click', function(e) {
+      var btn = e.target.closest('[data-confirm]');
+      if (!btn) return;
+      e.preventDefault();
+      _confirmForm = btn.closest('form');
+      document.getElementById('confirm-msg').textContent = btn.dataset.confirm;
+      document.getElementById('confirm-modal').style.display = 'flex';
+    });
+    document.getElementById('confirm-ok').addEventListener('click', function() {
+      if (_confirmForm) _confirmForm.submit();
+      closeConfirm();
+    });
+    function closeConfirm() {
+      document.getElementById('confirm-modal').style.display = 'none';
+      _confirmForm = null;
+    }
+    document.getElementById('confirm-modal').addEventListener('click', function(e) {
+      if (e.target === this) closeConfirm();
     });
   </script>
 </body>

@@ -2,15 +2,18 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Connexion — ASTC Admin</title>
   <style>
-    body { font-family: system-ui; background: #f7f8fc; margin:0; }
-    .login-form { max-width:380px; margin:5rem auto; background:#fff; padding:2rem; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,.08); }
-    h1 { color:#1A2B6D; margin-top:0; }
-    label { display:block; margin:.5rem 0 .2rem; color:#444; }
-    input { width:100%; padding:.6rem; border:1px solid #ccc; border-radius:4px; box-sizing:border-box; }
-    button { width:100%; background:#E8721A; color:#fff; border:none; padding:.7rem; border-radius:4px; font-size:1rem; cursor:pointer; margin-top:1rem; }
-    .error { background:#ffebee; color:#c62828; padding:.6rem; border-radius:4px; margin-bottom:1rem; }
+    *, *::before, *::after { box-sizing: border-box; }
+    body { font-family: system-ui; background: #f7f8fc; margin:0; min-height:100dvh; display:flex; align-items:center; justify-content:center; padding:1rem; }
+    .login-form { width:100%; max-width:380px; background:#fff; padding:2rem; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,.08); }
+    h1 { color:#1A2B6D; margin-top:0; font-size:1.4rem; }
+    label { display:block; margin:.75rem 0 .25rem; color:#444; font-size:.95rem; }
+    input { width:100%; padding:.65rem .75rem; border:1px solid #ccc; border-radius:4px; font-size:1rem; }
+    button { width:100%; background:#E8721A; color:#fff; border:none; padding:.75rem; border-radius:4px; font-size:1rem; cursor:pointer; margin-top:1.25rem; }
+    button:hover { opacity:.88; }
+    .error { background:#ffebee; color:#c62828; padding:.6rem .75rem; border-radius:4px; margin-bottom:1rem; font-size:.9rem; }
   </style>
 </head>
 <body>

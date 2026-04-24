@@ -16,8 +16,12 @@ final class TournamentType extends AbstractType
         $b->add('name', TextType::class, ['label' => 'Nom', 'constraints' => [new Assert\NotBlank()]])
           ->add('startDate', DateType::class, ['label' => 'Début', 'widget' => 'single_text', 'input' => 'datetime_immutable'])
           ->add('endDate', DateType::class, ['label' => 'Fin', 'widget' => 'single_text', 'input' => 'datetime_immutable'])
-          ->add('type', ChoiceType::class, ['label' => 'Type', 'choices' => ['Ouvert' => DomainType::OPEN->value, 'Membres uniquement' => DomainType::MEMBERS_ONLY->value]])
+          ->add('type', ChoiceType::class, ['label' => 'Type', 'choices' => ['Ouvert' => DomainType::OPEN->value, 'Membres uniquement' => DomainType::MEMBERS_ONLY->value, 'Ten Up' => DomainType::TEN_UP->value]])
           ->add('maxParticipants', IntegerType::class, ['label' => 'Max participants', 'constraints' => [new Assert\Positive()]])
-          ->add('description', TextareaType::class, ['label' => 'Description', 'required' => false]);
+          ->add('description', TextareaType::class, [
+              'label' => 'Description',
+              'required' => false,
+              'attr' => ['placeholder' => 'Ex : De N/C à 30/4 — Hommes, Femmes, Jeunes', 'rows' => 3],
+          ]);
     }
 }

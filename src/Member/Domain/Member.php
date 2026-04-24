@@ -26,26 +26,31 @@ class Member
     #[ORM\Column(type: 'email', nullable: true)]
     private ?Email $email;
 
-    private function __construct(Uuid $id, string $lastName, string $firstName, PhoneNumber $phone, ?Email $email)
+    #[ORM\Column(type: 'date_immutable', nullable: true)]
+    private ?\DateTimeImmutable $birthDate;
+
+    private function __construct(Uuid $id, string $lastName, string $firstName, PhoneNumber $phone, ?Email $email, ?\DateTimeImmutable $birthDate)
     {
         $this->id = $id;
         $this->lastName = $lastName;
         $this->firstName = $firstName;
         $this->phone = $phone;
         $this->email = $email;
+        $this->birthDate = $birthDate;
     }
 
-    public static function create(Uuid $id, string $lastName, string $firstName, PhoneNumber $phone, ?Email $email): self
+    public static function create(Uuid $id, string $lastName, string $firstName, PhoneNumber $phone, ?Email $email, ?\DateTimeImmutable $birthDate = null): self
     {
-        return new self($id, $lastName, $firstName, $phone, $email);
+        return new self($id, $lastName, $firstName, $phone, $email, $birthDate);
     }
 
-    public function update(string $lastName, string $firstName, PhoneNumber $phone, ?Email $email): void
+    public function update(string $lastName, string $firstName, PhoneNumber $phone, ?Email $email, ?\DateTimeImmutable $birthDate): void
     {
         $this->lastName = $lastName;
         $this->firstName = $firstName;
         $this->phone = $phone;
         $this->email = $email;
+        $this->birthDate = $birthDate;
     }
 
     public function id(): Uuid { return $this->id; }
@@ -53,4 +58,5 @@ class Member
     public function firstName(): string { return $this->firstName; }
     public function phone(): PhoneNumber { return $this->phone; }
     public function email(): ?Email { return $this->email; }
+    public function birthDate(): ?\DateTimeImmutable { return $this->birthDate; }
 }

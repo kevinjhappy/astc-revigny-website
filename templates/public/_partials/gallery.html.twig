@@ -4,9 +4,9 @@
     <div class="divider" style="background:#E8721A"></div>
     <div class="swiper gallery-swiper">
       <div class="swiper-wrapper">
-        {% for n in ['01','02','03','04','05','06'] %}
+        {% for photoName in galleryList %}
           <div class="swiper-slide">
-            <img src="{{ asset('images/photos/' ~ n ~ '.jpg') }}" alt="Photo du club {{ n }}">
+            <img src="{{ asset('images/photos/' ~ photoName) }}" alt="Photo du club {{ photoName }}">
           </div>
         {% endfor %}
       </div>

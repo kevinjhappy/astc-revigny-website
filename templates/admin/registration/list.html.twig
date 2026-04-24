@@ -31,22 +31,28 @@
         <td>{{ r.lastName }}</td><td>{{ r.firstName }}</td>
         <td>{{ r.phone }}</td><td>{{ r.email }}</td>
         <td>{{ r.status.value }}</td>
-        <td>
+        <td style="white-space:nowrap">
           {% if r.status.value == "PENDING" %}
             <form method="post" action="{{ path("admin_registration_confirm", {id: r.id}) }}" style="display:inline">
               <input type="hidden" name="_token" value="{{ csrf_token("cnf" ~ r.id) }}">
-              <button>Confirmer</button>
+              <button style="background:#28a745">Confirmer</button>
             </form>
           {% endif %}
-          {% if r.status.value in ["PENDING","CONFIRMED","WAITING_LIST"] %}
+          {% if r.status.value != "PENDING" %}
+            <form method="post" action="{{ path("admin_registration_reset", {id: r.id}) }}" style="display:inline">
+              <input type="hidden" name="_token" value="{{ csrf_token("rst" ~ r.id) }}">
+              <button style="background:#17a2b8">En attente</button>
+            </form>
+          {% endif %}
+          {% if r.status.value != "CANCELLED" %}
             <form method="post" action="{{ path("admin_registration_cancel", {id: r.id}) }}" style="display:inline">
               <input type="hidden" name="_token" value="{{ csrf_token("can" ~ r.id) }}">
               <button style="background:#E8721A">Annuler</button>
             </form>
           {% endif %}
-          <form method="post" action="{{ path("admin_registration_delete", {id: r.id}) }}" style="display:inline" onsubmit="return confirm('Supprimer ?')">
+          <form method="post" action="{{ path("admin_registration_delete", {id: r.id}) }}" style="display:inline">
             <input type="hidden" name="_token" value="{{ csrf_token("del" ~ r.id) }}">
-            <button style="background:#dc3545">Supprimer</button>
+            <button style="background:#dc3545" data-confirm="Supprimer définitivement l'inscription de {{ r.firstName }} {{ r.lastName }} ?">Supprimer</button>
           </form>
         </td>
       </tr>

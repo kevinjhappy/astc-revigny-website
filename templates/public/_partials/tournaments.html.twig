@@ -1,22 +1,74 @@
-<section id="tournaments" data-aos="fade-up">
-  <h2>Tournois</h2>
-  <div class="divider"></div>
-  {% if tournaments|length == 0 %}
-    <p>Aucun tournoi publié pour le moment.</p>
-  {% else %}
-    <div class="tournaments-grid">
-      {% for t in tournaments %}
-        <article class="tournament-card" data-card>
-          <span class="badge {{ t.type == "MEMBERS_ONLY" ? "members" }}">
-            {{ t.type == "OPEN" ? "OUVERT" : "MEMBRES" }}
-          </span>
-          <h3>{{ t.name }}</h3>
-          <p>{{ t.startDate|date("d/m/Y") }} → {{ t.endDate|date("d/m/Y") }}</p>
-          {% if t.description %}<p>{{ t.description }}</p>{% endif %}
-          <p class="remaining">Places restantes : {{ max(0, t.max - t.confirmed) }} / {{ t.max }}</p>
-          <button class="btn" data-register="{{ t.id }}" data-type="{{ t.type }}" data-name="{{ t.name }}">S'inscrire</button>
-        </article>
-      {% endfor %}
-    </div>
-  {% endif %}
+{% set frMois = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'] %}
+<section id="tournaments" class="tournaments-section" data-aos="fade-up">
+  <div class="tournaments-inner">
+    <p class="section-label">Inscriptions ouvertes</p>
+    <h2>Nos tournois</h2>
+    <div class="divider"></div>
+    {% if tournaments|length == 0 %}
+      <p>Aucun tournoi publié pour le moment.</p>
+    {% else %}
+      <div class="tournaments-grid">
+        {% for t in tournaments %}
+          {% set remaining = max(0, t.max - t.confirmed) %}
+          <article class="tournament-card" data-card>
+            <div class="tc-header">
+              <span class="badge {{ t.type == 'MEMBERS_ONLY' ? 'members' : (t.type == 'TEN_UP' ? 'tenup') }}">
+                {{ t.type == 'OPEN' ? 'Ouvert à tous' : (t.type == 'MEMBERS_ONLY' ? 'Membres uniquement' : 'Ten Up') }}
+              </span>
+              <h3>{{ t.name }}</h3>
+              <p class="tc-date">
+                {{ t.startDate|date('j') }} {{ frMois[t.startDate|date('n') - 1] }} {{ t.startDate|date('Y') }}
+                →
+                {{ t.endDate|date('j') }} {{ frMois[t.endDate|date('n') - 1] }} {{ t.endDate|date('Y') }}
+              </p>
+            </div>
+            {% if t.description %}
+              <div class="tc-body">
+                <p>{{ t.description }}</p>
+              </div>
+            {% endif %}
+            <div class="tc-footer">
+              {% if t.type == 'TEN_UP' %}
+                <p class="tenup-info">Inscriptions via l'application <strong>Ten Up</strong></p>
+              {% else %}
+                <div class="places-left">
+                  Places : <strong>{{ remaining }}</strong>
+                </div>
+                {% if remaining > 0 %}
+                  <button class="btn" data-register="{{ t.id }}" data-type="{{ t.type }}" data-name="{{ t.name }}">S'inscrire</button>
+                {% else %}
+                  <button class="btn btn-waitlist" data-register="{{ t.id }}" data-type="{{ t.type }}" data-name="{{ t.name }}">Liste d'attente</button>
+                {% endif %}
+              {% endif %}
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+{#    {% if closedTournaments|length > 0 %}#}
+{#      <div class="closed-tournaments">#}
+{#        <h3>Tournois passés</h3>#}
+{#        <table class="closed-table">#}
+{#          <thead>#}
+{#            <tr><th>Tournoi</th><th>Dates</th><th>Type</th></tr>#}
+{#          </thead>#}
+{#          <tbody>#}
+{#            {% for t in closedTournaments %}#}
+{#              <tr>#}
+{#                <td>{{ t.name }}</td>#}
+{#                <td>#}
+{#                  {{ t.startDate|date('j') }} {{ frMois[t.startDate|date('n') - 1] }}#}
+{#                  → {{ t.endDate|date('j') }} {{ frMois[t.endDate|date('n') - 1] }} {{ t.endDate|date('Y') }}#}
+{#                </td>#}
+{#                <td>#}
+{#                  {{ t.type == 'OPEN' ? 'Ouvert à tous' : (t.type == 'MEMBERS_ONLY' ? 'Membres uniquement' : 'Ten Up') }}#}
+{#                </td>#}
+{#              </tr>#}
+{#            {% endfor %}#}
+{#          </tbody>#}
+{#        </table>#}
+{#      </div>#}
+{#    {% endif %}#}
+  </div>
 </section>

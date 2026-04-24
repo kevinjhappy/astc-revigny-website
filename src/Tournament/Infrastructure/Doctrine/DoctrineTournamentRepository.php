@@ -23,4 +23,12 @@ final class DoctrineTournamentRepository implements TournamentRepository
         return $this->em->getRepository(Tournament::class)
             ->findBy(['status' => TournamentStatus::PUBLISHED->value], ['startDate' => 'ASC']);
     }
+    public function publishedOrClosed(): array
+    {
+        return $this->em->createQueryBuilder()->select('t')->from(Tournament::class, 't')
+            ->where('t.status IN (:statuses)')
+            ->setParameter('statuses', [TournamentStatus::PUBLISHED->value, TournamentStatus::CLOSED->value])
+            ->orderBy('t.startDate', 'ASC')
+            ->getQuery()->getResult();
+    }
 }

@@ -1,0 +1,16 @@
+{% extends "base_admin.html.twig" %}
+{% block title %}Importer des membres{% endblock %}
+{% block body %}
+  <h1>Importer des membres (CSV)</h1>
+  <p style="color:#555;margin-bottom:1.5rem">
+    Le fichier doit être au format <strong>CSV avec séparateur point-virgule</strong> et contenir en première ligne l'en-tête :<br>
+    <code>Prénom;Nom;Téléphone;Email;date de naissance</code><br>
+    Les colonnes <em>Email</em> et <em>date de naissance</em> sont optionnelles. La date de naissance doit être au format <strong>JJ/MM/AAAA</strong>.
+  </p>
+  <form method="post" enctype="multipart/form-data" style="max-width:480px">
+    <label for="csv">Fichier CSV</label>
+    <input type="file" id="csv" name="csv" accept=".csv,text/csv" required style="margin-bottom:1rem">
+    <button type="submit">Importer</button>
+  </form>
+  <p style="margin-top:1.5rem"><a href="{{ path("admin_member_list") }}">← Retour à la liste</a></p>
+{% endblock %}

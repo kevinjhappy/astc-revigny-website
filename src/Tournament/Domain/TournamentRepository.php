@@ -9,4 +9,6 @@ interface TournamentRepository
     public function all(): array;
     /** @return Tournament[] */
     public function published(): array;
+    /** @return Tournament[] */
+    public function publishedOrClosed(): array;
 }

@@ -5,30 +5,68 @@
   <p>{{ tournament.startDate|date("d/m/Y") }} → {{ tournament.endDate|date("d/m/Y") }}</p>
   <p>Type : <strong>{{ tournament.type.value }}</strong> — Statut : <strong>{{ tournament.status.value }}</strong> — Max : {{ tournament.maxParticipants }}</p>
   {% if tournament.description %}<p>{{ tournament.description }}</p>{% endif %}
-  <a href="{{ path("admin_tournament_edit", {id: tournament.id}) }}" class="btn" style="background:#1A2B6D">Éditer</a>
-  {% if tournament.status.value == "DRAFT" %}
-    <form method="post" action="{{ path("admin_tournament_publish", {id: tournament.id}) }}" style="display:inline">
-      <input type="hidden" name="_token" value="{{ csrf_token("pub" ~ tournament.id) }}">
-      <button>Publier</button>
-    </form>
-  {% elseif tournament.status.value == "PUBLISHED" %}
-    <form method="post" action="{{ path("admin_tournament_close", {id: tournament.id}) }}" style="display:inline">
-      <input type="hidden" name="_token" value="{{ csrf_token("cls" ~ tournament.id) }}">
-      <button>Clôturer</button>
-    </form>
-  {% endif %}
+
+  <div style="margin:1rem 0;display:flex;flex-wrap:wrap;gap:.5rem;align-items:center">
+    <a href="{{ path("admin_tournament_edit", {id: tournament.id}) }}" class="btn" style="background:#1A2B6D">Éditer</a>
+    {% if tournament.status.value == "DRAFT" %}
+      <form method="post" action="{{ path("admin_tournament_publish", {id: tournament.id}) }}" style="display:inline">
+        <input type="hidden" name="_token" value="{{ csrf_token("pub" ~ tournament.id) }}">
+        <button style="background:#28a745">Publier</button>
+      </form>
+    {% elseif tournament.status.value == "PUBLISHED" %}
+      <form method="post" action="{{ path("admin_tournament_close", {id: tournament.id}) }}" style="display:inline">
+        <input type="hidden" name="_token" value="{{ csrf_token("cls" ~ tournament.id) }}">
+        <button data-confirm="Clôturer le tournoi « {{ tournament.name }} » ?">Clôturer</button>
+      </form>
+      <form method="post" action="{{ path("admin_tournament_unpublish", {id: tournament.id}) }}" style="display:inline">
+        <input type="hidden" name="_token" value="{{ csrf_token("unp" ~ tournament.id) }}">
+        <button style="background:#6c757d" data-confirm="Repasser « {{ tournament.name }} » en brouillon ?">Dépublier</button>
+      </form>
+    {% elseif tournament.status.value == "CLOSED" %}
+      <form method="post" action="{{ path("admin_tournament_reopen", {id: tournament.id}) }}" style="display:inline">
+        <input type="hidden" name="_token" value="{{ csrf_token("rop" ~ tournament.id) }}">
+        <button style="background:#28a745">Réouvrir</button>
+      </form>
+    {% endif %}
+  </div>
+
   <h2>Inscriptions ({{ registrations|length }})</h2>
   <table>
-    <thead><tr><th>Nom</th><th>Prénom</th><th>Tél</th><th>Email</th><th>Statut</th><th>Date</th></tr></thead>
+    <thead><tr><th>Nom</th><th>Prénom</th><th>Tél</th><th>Email</th><th>Statut</th><th>Date</th><th>Actions</th></tr></thead>
     <tbody>
     {% for r in registrations %}
       <tr>
         <td>{{ r.lastName }}</td><td>{{ r.firstName }}</td>
         <td>{{ r.phone }}</td><td>{{ r.email }}</td>
-        <td>{{ r.status.value }}</td><td>{{ r.registeredAt|date("d/m/Y H:i") }}</td>
+        <td>{{ r.status.value }}</td>
+        <td>{{ r.registeredAt|date("d/m/Y H:i") }}</td>
+        <td style="white-space:nowrap">
+          {% if r.status.value == "PENDING" %}
+            <form method="post" action="{{ path("admin_registration_confirm", {id: r.id}) }}" style="display:inline">
+              <input type="hidden" name="_token" value="{{ csrf_token("cnf" ~ r.id) }}">
+              <button style="background:#28a745">Confirmer</button>
+            </form>
+          {% endif %}
+          {% if r.status.value != "PENDING" %}
+            <form method="post" action="{{ path("admin_registration_reset", {id: r.id}) }}" style="display:inline">
+              <input type="hidden" name="_token" value="{{ csrf_token("rst" ~ r.id) }}">
+              <button style="background:#17a2b8">En attente</button>
+            </form>
+          {% endif %}
+          {% if r.status.value != "CANCELLED" %}
+            <form method="post" action="{{ path("admin_registration_cancel", {id: r.id}) }}" style="display:inline">
+              <input type="hidden" name="_token" value="{{ csrf_token("can" ~ r.id) }}">
+              <button style="background:#E8721A">Annuler</button>
+            </form>
+          {% endif %}
+          <form method="post" action="{{ path("admin_registration_delete", {id: r.id}) }}" style="display:inline">
+            <input type="hidden" name="_token" value="{{ csrf_token("del" ~ r.id) }}">
+            <button style="background:#dc3545" data-confirm="Supprimer définitivement {{ r.firstName }} {{ r.lastName }} ?">Supprimer</button>
+          </form>
+        </td>
       </tr>
     {% else %}
-      <tr><td colspan="6">Aucune inscription.</td></tr>
+      <tr><td colspan="7">Aucune inscription.</td></tr>
     {% endfor %}
     </tbody>
   </table>

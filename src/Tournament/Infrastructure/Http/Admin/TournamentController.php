@@ -8,6 +8,10 @@ use App\Tournament\Application\Command\CreateTournamentCommand;
 use App\Tournament\Application\Command\CreateTournamentHandler;
 use App\Tournament\Application\Command\PublishTournamentCommand;
 use App\Tournament\Application\Command\PublishTournamentHandler;
+use App\Tournament\Application\Command\ReopenTournamentCommand;
+use App\Tournament\Application\Command\ReopenTournamentHandler;
+use App\Tournament\Application\Command\UnpublishTournamentCommand;
+use App\Tournament\Application\Command\UnpublishTournamentHandler;
 use App\Tournament\Application\Command\UpdateTournamentCommand;
 use App\Tournament\Application\Command\UpdateTournamentHandler;
 use App\Tournament\Domain\TournamentRepository;
@@ -75,14 +79,40 @@ final class TournamentController extends AbstractController
     #[Route('/{id}/publish', name: 'admin_tournament_publish', methods: ['POST'])]
     public function publish(string $id, Request $r, PublishTournamentHandler $h): Response
     {
-        if ($this->isCsrfTokenValid('pub'.$id, $r->request->get('_token'))) $h(new PublishTournamentCommand($id));
+        if ($this->isCsrfTokenValid('pub'.$id, $r->request->get('_token'))) {
+            $h(new PublishTournamentCommand($id));
+            $this->addFlash('success', 'Tournoi publié');
+        }
         return $this->redirectToRoute('admin_tournament_detail', ['id' => $id]);
     }
 
     #[Route('/{id}/close', name: 'admin_tournament_close', methods: ['POST'])]
     public function close(string $id, Request $r, CloseTournamentHandler $h): Response
     {
-        if ($this->isCsrfTokenValid('cls'.$id, $r->request->get('_token'))) $h(new CloseTournamentCommand($id));
+        if ($this->isCsrfTokenValid('cls'.$id, $r->request->get('_token'))) {
+            $h(new CloseTournamentCommand($id));
+            $this->addFlash('success', 'Tournoi clôturé');
+        }
+        return $this->redirectToRoute('admin_tournament_detail', ['id' => $id]);
+    }
+
+    #[Route('/{id}/reopen', name: 'admin_tournament_reopen', methods: ['POST'])]
+    public function reopen(string $id, Request $r, ReopenTournamentHandler $h): Response
+    {
+        if ($this->isCsrfTokenValid('rop'.$id, $r->request->get('_token'))) {
+            $h(new ReopenTournamentCommand($id));
+            $this->addFlash('success', 'Tournoi réouvert');
+        }
+        return $this->redirectToRoute('admin_tournament_detail', ['id' => $id]);
+    }
+
+    #[Route('/{id}/unpublish', name: 'admin_tournament_unpublish', methods: ['POST'])]
+    public function unpublish(string $id, Request $r, UnpublishTournamentHandler $h): Response
+    {
+        if ($this->isCsrfTokenValid('unp'.$id, $r->request->get('_token'))) {
+            $h(new UnpublishTournamentCommand($id));
+            $this->addFlash('success', 'Tournoi dépublié (brouillon)');
+        }
         return $this->redirectToRoute('admin_tournament_detail', ['id' => $id]);
     }
 }

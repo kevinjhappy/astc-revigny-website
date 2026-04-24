@@ -50,6 +50,8 @@ class Registration
 
     public function cancel(): void { $this->status = RegistrationStatus::CANCELLED; }
 
+    public function resetToPending(): void { $this->status = RegistrationStatus::PENDING; }
+
     public function promoteToPending(): void
     {
         if ($this->status !== RegistrationStatus::WAITING_LIST) throw new \DomainException('only WAITING_LIST can be promoted');

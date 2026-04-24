@@ -13,7 +13,8 @@ a { color: var(--accent); text-decoration: none; }
 .nav { position: sticky; top:0; z-index:100; display:flex; justify-content:space-between; align-items:center;
   padding: .75rem 2rem; background: rgba(255,255,255,.95); backdrop-filter: blur(6px);
   border-bottom: 1px solid #eee; }
-.nav .logo { font-family: Georgia, serif; color: var(--primary); font-weight:700; font-size:1.1rem; }
+.nav .logo { display:flex; align-items:center; }
+.nav .logo img { height:40px; width:auto; display:block; }
 .nav ul { display:flex; gap:1.5rem; list-style:none; margin:0; padding:0; }
 .nav a { color: var(--primary); font-weight:500; }
 .btn { display:inline-block; background: var(--accent); color:#fff; padding:.7rem 1.4rem;
@@ -37,17 +38,81 @@ section { padding: 5rem 2rem; max-width: 1200px; margin: 0 auto; }
 .stat { text-align:center; padding:1rem; background: var(--bg-alt); border-radius: 6px; }
 .stat strong { display:block; font-size: 2rem; color: var(--accent); font-family: Georgia, serif; }
 
-.tournaments-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 1.5rem; }
-.tournament-card { background:#fff; border-radius:8px; padding:1.5rem; box-shadow:0 4px 12px rgba(0,0,0,.06); cursor:default; }
-.tournament-card h3 { margin:.75rem 0 .5rem; }
-.tournament-card .badge { display:inline-block; padding:.2rem .6rem; border-radius:3px; font-size:.75rem;
-  background: var(--accent); color:#fff; font-weight:600; }
-.tournament-card .badge.members { background: var(--primary); }
-.tournament-card .remaining { color:#666; font-size:.9rem; margin:.5rem 0 1rem; }
+.section-label { font-size:.7rem; font-weight:700; letter-spacing:4px; text-transform:uppercase; color:var(--accent); margin-bottom:.5rem; }
+
+.tournaments-section { max-width:none; margin:0; padding:0; background:var(--bg-alt); }
+.tournaments-inner { max-width:1200px; margin:0 auto; padding:5rem 2rem; }
+
+.tournaments-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:1.5rem; }
+
+.tournament-card {
+  background:#fff; border-radius:14px; overflow:hidden;
+  box-shadow:0 2px 16px rgba(26,43,109,.08);
+  transition:transform .2s, box-shadow .2s;
+  display:flex; flex-direction:column; cursor:default;
+}
+.tournament-card:hover { transform:translateY(-4px); box-shadow:0 8px 32px rgba(26,43,109,.15); }
+
+.tc-header { padding:1.25rem 1.25rem 1rem; border-bottom:1px solid #f0f0f0; }
+.tc-header h3 { margin:.75rem 0 .4rem; font-size:1.05rem; }
+.tc-date { font-size:.82rem; color:#888; margin:0; }
+
+.tc-body { padding:.75rem 1.25rem; flex:1; }
+.tc-body p { font-size:.85rem; color:#666; line-height:1.6; margin:0; }
+
+.tc-footer {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:.875rem 1.25rem; background:#f7f8fc; border-top:1px solid #eee;
+}
+.places-left { font-size:.8rem; color:#888; }
+.places-left strong { color:var(--accent); font-size:1rem; }
+
+.badge { display:inline-block; padding:.3rem .75rem; border-radius:12px; font-size:.7rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; }
+.badge:not(.members):not(.tenup) { background:#e8f5e9; color:#2e7d32; }
+.badge.members { background:#fff3e0; color:#e65100; }
+.badge.tenup { background:#e8eaf6; color:#3949ab; }
+
+.tenup-info { font-size:.85rem; color:#555; margin:0; }
+.tenup-info strong { color:#3949ab; }
+
+.closed-tournaments { margin-top:3rem; }
+.closed-tournaments h3 { font-size:1.1rem; color:#666; font-weight:600; margin-bottom:.75rem; }
+.closed-table { width:100%; border-collapse:collapse; font-size:.875rem; }
+.closed-table th { background:rgba(0,0,0,.06); color:#555; font-weight:600; padding:.5rem .75rem; text-align:left; border-bottom:2px solid rgba(0,0,0,.1); }
+.closed-table td { padding:.5rem .75rem; border-bottom:1px solid rgba(0,0,0,.06); color:#777; }
+.closed-table tr:last-child td { border-bottom:none; }
+
+.btn-waitlist { background:var(--primary) !important; font-size:.85rem; padding:.55rem 1rem; }
 
 .gallery { background: var(--primary); }
 .swiper { width:100%; padding: 2rem 0; }
-.swiper-slide img { width:100%; height:300px; object-fit:cover; border-radius:6px; }
+.swiper-slide img { width:100%; height:300px; object-fit:cover; border-radius:6px; cursor:pointer; transition:transform .2s; }
+.swiper-slide img:hover { transform: scale(1.03); }
+
+.tennis-deco-ball { border-radius:50%; background:#C8E320; }
+.tennis-deco-ball::before {
+  content:''; position:absolute; inset:0; border-radius:50%; box-sizing:border-box;
+  border-top:3px solid rgba(255,255,255,.55);
+  border-bottom:3px solid rgba(255,255,255,.55);
+  transform:rotate(35deg);
+}
+
+/* Lightbox */
+.lb-overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,.88); display:none;
+  align-items:center; justify-content:center; z-index:2000;
+}
+.lb-overlay.open { display:flex; }
+.lb-img { max-width:90vw; max-height:85vh; object-fit:contain; border-radius:4px; display:block; }
+.lb-close {
+  position:absolute; top:1rem; right:1.5rem; background:none; border:none;
+  color:#fff; font-size:2.5rem; cursor:pointer; line-height:1; padding:0;
+}
+.lb-nav {
+  background:none; border:none; color:#fff; font-size:4rem; cursor:pointer;
+  padding:0 1rem; line-height:1; user-select:none;
+}
+.lb-nav:hover { color:var(--accent); }
 
 .contact-grid { display:grid; grid-template-columns: 1fr 2fr; gap: 3rem; }
 .contact-grid iframe { width:100%; height: 300px; border:0; border-radius:6px; }
@@ -65,8 +130,25 @@ footer { background: var(--primary); color:#fff; text-align:center; padding: 2re
 .modal-feedback.ok { background: #e8f5e9; color: #2e7d32; display:block; }
 .modal-feedback.err { background: #ffebee; color: #c62828; display:block; }
 
+/* Membership section */
+.membership-intro { max-width:680px; margin:0 auto 2.5rem; text-align:center; color:#555; font-size:1.05rem; }
+.membership-grid { display:grid; grid-template-columns: repeat(3,1fr); gap:1.5rem; margin-bottom:3rem; }
+.membership-card { background:#fff; border:2px solid #e8e8e8; border-radius:12px; padding:2rem 1.5rem; text-align:center; transition:transform .2s,box-shadow .2s; }
+.membership-card:hover { transform:translateY(-4px); box-shadow:0 8px 24px rgba(0,0,0,.1); }
+.membership-card.featured { border-color:var(--accent); box-shadow:0 4px 16px rgba(232,114,26,.15); }
+.membership-price { font-size:2.5rem; font-weight:800; color:var(--primary); line-height:1; margin-bottom:.5rem; }
+.membership-name { font-weight:700; font-size:1.05rem; color:#222; margin-bottom:.8rem; }
+.membership-desc { font-size:.9rem; color:#666; line-height:1.5; }
+.membership-hours { background:var(--bg-alt); border-radius:12px; padding:2rem 2.5rem; max-width:600px; margin:0 auto; }
+.membership-hours h3 { margin:0 0 .8rem; color:var(--primary); }
+.hours-list { list-style:none; padding:0; margin:.5rem 0 0; }
+.hours-list li { padding:.4rem 0; border-bottom:1px solid #e0e0e0; font-size:.95rem; }
+.hours-list li:last-child { border-bottom:none; }
+
 @media (max-width: 768px) {
   .club, .contact-grid { grid-template-columns: 1fr; }
   section { padding: 3rem 1rem; }
   .nav ul { display:none; }
+  .membership-grid { grid-template-columns: 1fr; }
+  .membership-hours { padding:1.5rem; }
 }

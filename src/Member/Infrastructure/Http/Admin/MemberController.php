@@ -36,7 +36,7 @@ final class MemberController extends AbstractController
         $form->handleRequest($r);
         if ($form->isSubmitted() && $form->isValid()) {
             $d = $form->getData();
-            $h(new CreateMemberCommand($d["lastName"], $d["firstName"], $d["phone"], $d["email"] ?? null));
+            $h(new CreateMemberCommand($d["lastName"], $d["firstName"], $d["phone"], $d["email"] ?? null, $d["birthDate"] ?? null));
             $this->addFlash("success", "Membre créé");
             return $this->redirectToRoute("admin_member_list");
         }
@@ -50,15 +50,73 @@ final class MemberController extends AbstractController
         $form = $this->createForm(MemberType::class, [
             "lastName" => $m->lastName(), "firstName" => $m->firstName(),
             "phone" => (string)$m->phone(), "email" => $m->email() ? (string)$m->email() : null,
+            "birthDate" => $m->birthDate()?->format('d/m/Y'),
         ]);
         $form->handleRequest($r);
         if ($form->isSubmitted() && $form->isValid()) {
             $d = $form->getData();
-            $h(new UpdateMemberCommand($id, $d["lastName"], $d["firstName"], $d["phone"], $d["email"] ?? null));
+            $h(new UpdateMemberCommand($id, $d["lastName"], $d["firstName"], $d["phone"], $d["email"] ?? null, $d["birthDate"] ?? null));
             $this->addFlash("success", "Membre mis à jour");
             return $this->redirectToRoute("admin_member_list");
         }
         return $this->render("admin/member/edit.html.twig", ["form" => $form, "member" => $m]);
+    }
+
+    #[Route("/import", name: "admin_member_import", methods: ["GET","POST"])]
+    public function import(Request $r, CreateMemberHandler $h): Response
+    {
+        if ($r->getMethod() === 'GET') {
+            return $this->render("admin/member/import.html.twig");
+        }
+
+        $file = $r->files->get('csv');
+        if (!$file) {
+            $this->addFlash('error', 'Aucun fichier sélectionné.');
+            return $this->redirectToRoute('admin_member_import');
+        }
+
+        $handle = fopen($file->getPathname(), 'r');
+        $imported = 0;
+        $errors = [];
+        $line = 0;
+
+        // skip header
+        fgetcsv($handle, 0, ';');
+
+        while (($row = fgetcsv($handle, 0, ';')) !== false) {
+            $line++;
+            if (count($row) < 3) {
+                $errors[] = "Ligne $line : colonnes insuffisantes, ignorée.";
+                continue;
+            }
+
+            [$firstName, $lastName, $phone] = array_map('trim', $row);
+            $email = isset($row[3]) ? trim($row[3]) : null;
+            $birthDate = isset($row[4]) ? trim($row[4]) : null;
+
+            if ($firstName === '' || $lastName === '' || $phone === '') {
+                $errors[] = "Ligne $line : prénom, nom ou téléphone manquant, ignorée.";
+                continue;
+            }
+
+            try {
+                $h(new CreateMemberCommand($lastName, $firstName, $phone, $email ?: null, $birthDate ?: null));
+                $imported++;
+            } catch (\Throwable $e) {
+                $errors[] = "Ligne $line ($firstName $lastName) : " . $e->getMessage();
+            }
+        }
+
+        fclose($handle);
+
+        if ($imported > 0) {
+            $this->addFlash('success', "$imported membre(s) importé(s) avec succès.");
+        }
+        foreach ($errors as $err) {
+            $this->addFlash('error', $err);
+        }
+
+        return $this->redirectToRoute('admin_member_list');
     }
 
     #[Route("/{id}", name: "admin_member_delete", methods: ["POST"])]

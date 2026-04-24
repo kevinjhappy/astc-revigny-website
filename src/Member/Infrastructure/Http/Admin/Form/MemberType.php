@@ -14,6 +14,12 @@ final class MemberType extends AbstractType
         $b->add("lastName", TextType::class, ["label" => "Nom", "constraints" => [new Assert\NotBlank(), new Assert\Length(max: 100)]])
           ->add("firstName", TextType::class, ["label" => "Prénom", "constraints" => [new Assert\NotBlank(), new Assert\Length(max: 100)]])
           ->add("phone", TextType::class, ["label" => "Téléphone", "constraints" => [new Assert\NotBlank()]])
-          ->add("email", EmailType::class, ["label" => "Email", "required" => false]);
+          ->add("email", EmailType::class, ["label" => "Email", "required" => false])
+          ->add("birthDate", TextType::class, [
+              "label" => "Date de naissance",
+              "required" => false,
+              "attr" => ["placeholder" => "JJ/MM/AAAA"],
+              "constraints" => [new Assert\Regex(["pattern" => '/^\d{2}\/\d{2}\/\d{4}$/', "message" => "Format attendu : JJ/MM/AAAA"])],
+          ]);
     }
 }

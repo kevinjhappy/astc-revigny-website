@@ -10,20 +10,31 @@ final class HomeController extends AbstractController
     #[Route('/', name: 'public_home', methods: ['GET'])]
     public function home(TournamentRepository $tRepo, RegistrationRepository $rRepo): Response
     {
-        $tournaments = $tRepo->published();
-        $rows = [];
-        foreach ($tournaments as $t) {
-            $rows[] = [
+        $galleryList = array_diff(scandir('./images/photos', SCANDIR_SORT_ASCENDING), ['..', '.']);
+        $openTournaments = [];
+        $closedTournaments = [];
+        foreach ($tRepo->publishedOrClosed() as $t) {
+            $row = [
                 'id' => (string)$t->id(),
                 'name' => $t->name(),
                 'startDate' => $t->startDate(),
                 'endDate' => $t->endDate(),
                 'type' => $t->type()->value,
+                'status' => $t->status()->value,
                 'description' => $t->description(),
                 'max' => $t->maxParticipants(),
                 'confirmed' => $rRepo->countConfirmed($t->id()),
             ];
+            if ($t->status()->value === 'PUBLISHED') {
+                $openTournaments[] = $row;
+            } else {
+                $closedTournaments[] = $row;
+            }
         }
-        return $this->render('public/home.html.twig', ['tournaments' => $rows]);
+        return $this->render('public/home.html.twig', [
+            'tournaments' => $openTournaments,
+            'closedTournaments' => $closedTournaments,
+            'galleryList' => $galleryList,
+        ]);
     }
 }

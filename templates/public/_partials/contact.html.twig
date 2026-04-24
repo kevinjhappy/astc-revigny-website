@@ -4,7 +4,8 @@
   <div class="contact-grid">
     <div>
       <p><strong>ASTC Revigny</strong><br>Rue du Stade<br>55800 Revigny-sur-Ornain</p>
-      <p><a href="https://facebook.com" target="_blank" rel="noopener">Facebook du club</a></p>
+      <p><a href="https://www.facebook.com/AstcRevigny" target="_blank" rel="noopener">Facebook du club</a></p>
+      <button class="btn" id="open-contact-modal" style="margin-top:1rem">Contactez-nous</button>
     </div>
     <div>
       <iframe
@@ -19,3 +20,17 @@
     </div>
   </div>
 </section>
+
+<div class="modal" id="contact-modal">
+  <div class="modal-content">
+    <button class="close" data-close>&times;</button>
+    <h2>Contactez-nous</h2>
+    <form id="contact-form">
+      <label>Votre email *<input type="email" name="email" required></label>
+      <label>Objet *<input type="text" name="subject" required maxlength="150"></label>
+      <label>Message *<textarea name="message" required rows="5" style="width:100%;padding:.6rem;border:1px solid #ccc;border-radius:4px;resize:vertical;font-family:inherit"></textarea></label>
+      <button class="btn" type="submit" style="margin-top:1rem;width:100%">Envoyer</button>
+    </form>
+    <div class="modal-feedback" id="contact-feedback"></div>
+  </div>
+</div>
