@@ -23,9 +23,12 @@ final class RegistrationController extends AbstractController
     #[Route('', name: 'admin_registration_list', methods: ['GET'])]
     public function list(Request $r, RegistrationRepository $repo, TournamentRepository $trepo): Response
     {
+        $activeTournaments = $trepo->notClosed();
+        $activeTournamentIds = array_map(fn($t) => (string)$t->id(), $activeTournaments);
+
         return $this->render('admin/registration/list.html.twig', [
-            'registrations' => $repo->all($r->query->get('tournament'), $r->query->get('status')),
-            'tournaments' => $trepo->all(),
+            'registrations' => $repo->all($r->query->get('tournament'), $r->query->get('status'), $activeTournamentIds),
+            'tournaments' => $activeTournaments,
             'selectedTournament' => $r->query->get('tournament'),
             'selectedStatus' => $r->query->get('status'),
         ]);

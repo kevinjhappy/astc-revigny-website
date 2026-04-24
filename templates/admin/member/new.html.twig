@@ -4,7 +4,7 @@
   <h1>Nouveau membre</h1>
   {{ form_start(form) }}
   {{ form_widget(form) }}
-  <button type="submit">Créer</button>
+  <p><button type="submit">Créer</button></p>
   {{ form_end(form) }}
-  <a href="{{ path("admin_member_list") }}">← Retour</a>
+  <a href="{{ path("admin_member_list") }}" class="btn">← Retour</a>
 {% endblock %}

@@ -17,7 +17,7 @@
         <td>{{ t.type.value }}</td>
         <td>{{ t.status.value }}</td>
         <td>{{ t.maxParticipants }}</td>
-        <td><a href="{{ path("admin_tournament_detail", {id: t.id}) }}">Voir</a></td>
+        <td><a href="{{ path("admin_tournament_detail", {id: t.id}) }}" class="btn" style="background: #1a5c1a">Voir</a></td>
       </tr>
     {% else %}
       <tr><td colspan="6">Aucun tournoi actif.</td></tr>
@@ -36,7 +36,7 @@
           <td>{{ t.startDate|date("d/m/Y") }}</td>
           <td>{{ t.type.value }}</td>
           <td>{{ t.maxParticipants }}</td>
-          <td><a href="{{ path("admin_tournament_detail", {id: t.id}) }}">Voir</a></td>
+          <td><a href="{{ path("admin_tournament_detail", {id: t.id}) }}" class="btn" style="background: #1a5c1a">Voir</a></td>
         </tr>
       {% endfor %}
       </tbody>

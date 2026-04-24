@@ -8,7 +8,7 @@
   {% endfor %}
   <form method="get" style="margin-bottom:1rem">
     <select name="tournament">
-      <option value="">Tous tournois</option>
+      <option value="">Tous les tournois en cours</option>
       {% for t in tournaments %}
         <option value="{{ t.id }}" {{ selectedTournament == t.id ~ "" ? "selected" }}>{{ t.name }}</option>
       {% endfor %}

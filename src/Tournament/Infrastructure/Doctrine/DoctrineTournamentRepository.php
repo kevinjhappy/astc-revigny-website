@@ -31,4 +31,12 @@ final class DoctrineTournamentRepository implements TournamentRepository
             ->orderBy('t.startDate', 'ASC')
             ->getQuery()->getResult();
     }
+    public function notClosed(): array
+    {
+        return $this->em->createQueryBuilder()->select('t')->from(Tournament::class, 't')
+            ->where('t.status != :closed')
+            ->setParameter('closed', TournamentStatus::CLOSED->value)
+            ->orderBy('t.startDate', 'DESC')
+            ->getQuery()->getResult();
+    }
 }

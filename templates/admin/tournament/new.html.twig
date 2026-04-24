@@ -2,6 +2,7 @@
 {% block title %}Nouveau tournoi{% endblock %}
 {% block body %}
   <h1>Nouveau tournoi</h1>
-  {{ form_start(form) }}{{ form_widget(form) }}<button type="submit">Créer</button>{{ form_end(form) }}
-  <a href="{{ path("admin_tournament_list") }}">← Retour</a>
+  {{ form_start(form) }}{{ form_widget(form) }}
+    <p><button type="submit">Créer</button></p>{{ form_end(form) }}
+  <a href="{{ path("admin_tournament_list") }}" class="btn">← Retour</a>
 {% endblock %}

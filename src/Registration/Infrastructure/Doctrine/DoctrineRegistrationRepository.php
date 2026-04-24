@@ -35,11 +35,15 @@ final class DoctrineRegistrationRepository implements RegistrationRepository
             ['registeredAt' => 'ASC']
         );
     }
-    public function all(?string $tournamentId, ?string $status): array
+    public function all(?string $tournamentId, ?string $status, array $allowedTournamentIds = []): array
     {
         $qb = $this->em->createQueryBuilder()->select('r')->from(Registration::class, 'r')
             ->orderBy('r.registeredAt', 'DESC');
-        if ($tournamentId) $qb->andWhere('r.tournamentId = :tid')->setParameter('tid', $tournamentId);
+        if ($tournamentId) {
+            $qb->andWhere('r.tournamentId = :tid')->setParameter('tid', $tournamentId);
+        } elseif ($allowedTournamentIds !== []) {
+            $qb->andWhere('r.tournamentId IN (:tids)')->setParameter('tids', $allowedTournamentIds);
+        }
         if ($status) $qb->andWhere('r.status = :st')->setParameter('st', $status);
         return $qb->getQuery()->getResult();
     }

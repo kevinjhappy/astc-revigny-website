@@ -11,5 +11,5 @@ interface RegistrationRepository
     public function countConfirmed(Uuid $tournamentId): int;
     public function firstWaitingList(Uuid $tournamentId): ?Registration;
     /** @return Registration[] */
-    public function all(?string $tournamentId, ?string $status): array;
+    public function all(?string $tournamentId, ?string $status, array $allowedTournamentIds = []): array;
 }

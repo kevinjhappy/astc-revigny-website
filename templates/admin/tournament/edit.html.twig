@@ -2,6 +2,7 @@
 {% block title %}Éditer tournoi{% endblock %}
 {% block body %}
   <h1>Éditer {{ tournament.name }}</h1>
-  {{ form_start(form) }}{{ form_widget(form) }}<button type="submit">Enregistrer</button>{{ form_end(form) }}
-  <a href="{{ path("admin_tournament_detail", {id: tournament.id}) }}">← Retour</a>
+  {{ form_start(form) }}{{ form_widget(form) }}
+    <p><button type="submit">Enregistrer</button></p>{{ form_end(form) }}
+  <a href="{{ path("admin_tournament_detail", {id: tournament.id}) }}" class="btn">← Retour</a>
 {% endblock %}

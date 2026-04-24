@@ -18,7 +18,7 @@
 </head>
 <body>
   <form method="post" action="{{ path("app_login") }}" class="login-form">
-    <h1>Connexion admin</h1>
+    <h1>ASTC Revigny admin</h1>
     {% if error %}<div class="error">{{ error.messageKey|trans(error.messageData, "security") }}</div>{% endif %}
     <label>Email</label>
     <input type="email" name="_username" value="{{ last_username }}" required autofocus>
