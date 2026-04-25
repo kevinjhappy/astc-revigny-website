@@ -21,4 +21,6 @@ yarn-error.log
 /.phpunit.cache/
 ###< phpunit/phpunit ###
 
+###> graphify-out ###
 /graphify-out/cache/
+###< graphify-out ###

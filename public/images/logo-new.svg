@@ -1,0 +1,62 @@
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" width="500" height="500">
+  <defs>
+    <clipPath id="head">
+      <ellipse cx="250" cy="170" rx="110" ry="125"/>
+    </clipPath>
+  </defs>
+
+  <!-- Background -->
+  <rect width="500" height="500" fill="white"/>
+
+  <!-- Racket head background -->
+  <ellipse cx="250" cy="170" rx="110" ry="125" fill="#F6F6F6"/>
+
+  <!-- Horizontal strings (orange) -->
+  <line x1="138" y1="75"  x2="362" y2="75"  stroke="#E8721A" stroke-width="5" clip-path="url(#head)"/>
+  <line x1="138" y1="110" x2="362" y2="110" stroke="#E8721A" stroke-width="5" clip-path="url(#head)"/>
+  <line x1="138" y1="145" x2="362" y2="145" stroke="#E8721A" stroke-width="5" clip-path="url(#head)"/>
+  <line x1="138" y1="180" x2="362" y2="180" stroke="#E8721A" stroke-width="5" clip-path="url(#head)"/>
+  <line x1="138" y1="215" x2="362" y2="215" stroke="#E8721A" stroke-width="5" clip-path="url(#head)"/>
+  <line x1="138" y1="250" x2="362" y2="250" stroke="#E8721A" stroke-width="5" clip-path="url(#head)"/>
+
+  <!-- Vertical strings (emerald) -->
+  <line x1="190" y1="45" x2="190" y2="295" stroke="#2D8653" stroke-width="5" clip-path="url(#head)"/>
+  <line x1="220" y1="45" x2="220" y2="295" stroke="#2D8653" stroke-width="5" clip-path="url(#head)"/>
+  <line x1="250" y1="45" x2="250" y2="295" stroke="#2D8653" stroke-width="5" clip-path="url(#head)"/>
+  <line x1="280" y1="45" x2="280" y2="295" stroke="#2D8653" stroke-width="5" clip-path="url(#head)"/>
+  <line x1="310" y1="45" x2="310" y2="295" stroke="#2D8653" stroke-width="5" clip-path="url(#head)"/>
+
+  <!-- Racket frame (navy) -->
+  <ellipse cx="250" cy="170" rx="110" ry="125" fill="none" stroke="#1A2B6D" stroke-width="16"/>
+
+  <!-- Throat (navy) -->
+  <polygon points="200,278 235,335 265,335 300,278" fill="#1A2B6D"/>
+
+  <!-- Handle (navy) -->
+  <rect x="233" y="333" width="34" height="85" rx="6" fill="#1A2B6D"/>
+
+  <!-- Grip wraps (orange) -->
+  <rect x="229" y="357" width="42" height="10" rx="3" fill="#E8721A"/>
+  <rect x="229" y="381" width="42" height="10" rx="3" fill="#E8721A"/>
+
+  <!-- End cap (emerald) -->
+  <ellipse cx="250" cy="422" rx="24" ry="9" fill="#2D8653"/>
+
+  <!-- ASTC -->
+  <text x="250" y="460"
+        text-anchor="middle"
+        font-family="'Arial Black', Arial, Helvetica, sans-serif"
+        font-weight="900"
+        font-size="40"
+        fill="#1A2B6D"
+        letter-spacing="8">ASTC</text>
+
+  <!-- REVIGNY -->
+  <text x="255" y="488"
+        text-anchor="middle"
+        font-family="Arial, Helvetica, sans-serif"
+        font-size="15"
+        font-weight="bold"
+        fill="#2D8653"
+        letter-spacing="11">REVIGNY</text>
+</svg>
