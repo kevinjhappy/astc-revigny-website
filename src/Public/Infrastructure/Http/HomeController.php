@@ -1,5 +1,6 @@
 <?php
 namespace App\Public\Infrastructure\Http;
+use App\News\Domain\PostRepository;
 use App\Registration\Domain\RegistrationRepository;
 use App\Tournament\Domain\TournamentRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -8,7 +9,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class HomeController extends AbstractController
 {
     #[Route('/', name: 'public_home', methods: ['GET'])]
-    public function home(TournamentRepository $tRepo, RegistrationRepository $rRepo): Response
+    public function home(TournamentRepository $tRepo, RegistrationRepository $rRepo, PostRepository $postRepo): Response
     {
         $galleryList = array_diff(scandir('./images/photos', SCANDIR_SORT_ASCENDING), ['..', '.']);
         $openTournaments = [];
@@ -35,6 +36,7 @@ final class HomeController extends AbstractController
             'tournaments' => $openTournaments,
             'closedTournaments' => $closedTournaments,
             'galleryList' => $galleryList,
+            'newsPosts' => $postRepo->latestPublished(6),
         ]);
     }
 }
