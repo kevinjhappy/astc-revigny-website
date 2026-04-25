@@ -34,6 +34,8 @@ final class RegisterHandlerTest extends TestCase
             public function get(Uuid $id): ?Tournament { return $this->t; }
             public function all(): array { return [$this->t]; }
             public function published(): array { return [$this->t]; }
+            public function publishedOrClosed(): array { return [$this->t]; }
+            public function notClosed(): array { return [$this->t]; }
         };
         $rRepo = new class($regs) implements RegistrationRepository {
             public array $store;
@@ -49,7 +51,7 @@ final class RegisterHandlerTest extends TestCase
                 foreach ($this->store as $r) if ($r->status() === RegistrationStatus::WAITING_LIST) return $r;
                 return null;
             }
-            public function all(?string $t, ?string $s): array { return array_values($this->store); }
+            public function all(?string $t, ?string $s, array $allowedTournamentIds = []): array { return array_values($this->store); }
         };
         $match = new class extends MatchMemberHandler {
             public function __construct() {}
