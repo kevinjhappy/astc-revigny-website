@@ -45,4 +45,22 @@ final class AutoLinkExtensionTest extends TestCase
         self::assertStringContainsString('Avant ', $result);
         self::assertStringContainsString(' après', $result);
     }
+
+    public function test_existing_html_anchor_is_not_double_wrapped(): void
+    {
+        $html = '<a href="https://symfony.com" target="_blank" rel="noopener noreferrer">https://symfony.com</a>';
+        $result = $this->ext->autolink($html);
+        self::assertSame($html, $result);
+        self::assertStringNotContainsString('<a href="https://symfony.com"><a', $result);
+    }
+
+    public function test_bare_url_is_wrapped_alongside_existing_anchor(): void
+    {
+        $input = '<a href="https://symfony.com" target="_blank" rel="noopener noreferrer">Symfony</a> et aussi https://php.net';
+        $result = $this->ext->autolink($input);
+        self::assertStringContainsString('<a href="https://symfony.com"', $result);
+        self::assertStringContainsString('<a href="https://php.net"', $result);
+        // l'ancre existante ne doit pas être imbriquée
+        self::assertSame(2, substr_count($result, '<a '));
+    }
 }
