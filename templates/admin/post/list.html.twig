@@ -8,6 +8,7 @@
     <thead>
       <tr>
         <th>Titre</th>
+        <th>Contenu</th>
         <th>Statut</th>
         <th>Publié le</th>
         <th></th>
@@ -17,6 +18,7 @@
     {% for post in posts %}
       <tr>
         <td>{{ post.title }}</td>
+        <td>{{ post.content|u.truncate(70, ' (...)')  }}</td>
         <td>{{ post.status.value }}</td>
         <td>{{ post.publishedAt ? post.publishedAt|date('d/m/Y H:i') : '—' }}</td>
         <td style="white-space:nowrap">

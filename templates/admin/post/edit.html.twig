@@ -2,7 +2,7 @@
 {% block title %}Éditer — {{ post.title }}{% endblock %}
 {% block body %}
   <h1>Éditer l'actualité</h1>
-  <a href="{{ path('admin_post_list') }}" style="color:#1A2B6D">← Retour à la liste</a>
+  <a href="{{ path('admin_post_list') }}" class="btn">← Retour à la liste</a>
 
   {{ form_start(form) }}
     {{ form_row(form.title) }}
