@@ -12,6 +12,9 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class ContactApiController extends AbstractController
 {
+    private const string CONTACT_EMAIL = 'kevin.nadin@gmail.com';
+//    private const string CONTACT_EMAIL = 'vincent.pottelette@gmail.com';
+
     #[Route('/api/contact', name: 'api_contact', methods: ['POST'])]
     public function contact(Request $r, MailerInterface $mailer, ValidatorInterface $v): JsonResponse
     {
@@ -33,7 +36,7 @@ final class ContactApiController extends AbstractController
 
         $email = (new Email())
             ->from('noreply@astc-revigny.fr')
-            ->to('vincent.pottelette@gmail.com')
+            ->to(self::CONTACT_EMAIL)
             ->replyTo($payload['email'])
             ->subject('[Contact ASTC Revigny] ' . $payload['subject'])
             ->text("Message de : {$payload['email']}\n\n{$payload['message']}");
