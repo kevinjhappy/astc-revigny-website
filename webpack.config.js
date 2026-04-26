@@ -45,6 +45,11 @@ Encore
     // enables hashed filenames (e.g. app.abc123.css)
     .enableVersioning(Encore.isProduction())
 
+    // absolute URLs like /images/xxx are served by nginx, not bundled by webpack
+    .configureCssLoader((config) => {
+        config.url = { filter: (url) => !url.startsWith('/') };
+    })
+
     // configure Babel
     // .configureBabel((config) => {
     //     config.plugins.push('@babel/a-babel-plugin');

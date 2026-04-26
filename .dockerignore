@@ -1,5 +1,6 @@
 node_modules/
 var/
+public/build/
 .git/
 .gitignore
 docker-compose.yml

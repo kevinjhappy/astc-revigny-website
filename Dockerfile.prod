@@ -5,6 +5,7 @@ RUN apk add --no-cache \
     git unzip icu-dev libzip-dev oniguruma-dev \
     autoconf g++ make linux-headers nodejs npm
 
+# Compile PHP extensions once (slow, ~5 min — only happens in builder)
 RUN docker-php-ext-install intl pdo pdo_mysql opcache zip \
  && pecl install apcu && docker-php-ext-enable apcu
 
@@ -12,29 +13,31 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/app
 
-# PHP deps (cached layer if composer.json unchanged)
+# PHP deps
 COPY composer.json composer.lock symfony.lock ./
 RUN APP_ENV=prod composer install \
     --no-dev --optimize-autoloader --no-interaction --no-scripts
 
-# JS deps & assets build (cached layer if package.json unchanged)
+# JS assets
 COPY package.json package-lock.json webpack.config.js ./
 RUN npm ci
 
 COPY assets/ assets/
-RUN npm run build
+RUN mkdir -p public && npm run build
 
-# Copy rest of the codebase, then finalise Composer
+# Full codebase
 COPY . .
 RUN APP_ENV=prod composer dump-autoload --optimize --no-dev
 
 # ── Runtime stage ─────────────────────────────────────────────────────────────
 FROM php:8.3-fpm-alpine
 
-RUN apk add --no-cache nginx supervisor icu-dev libzip-dev oniguruma-dev
+# Runtime libraries only (no dev headers, no compiler)
+RUN apk add --no-cache nginx supervisor icu-libs libzip oniguruma
 
-RUN docker-php-ext-install intl pdo pdo_mysql opcache zip \
- && pecl install apcu && docker-php-ext-enable apcu
+# Reuse compiled extensions from builder — no recompilation
+COPY --from=builder /usr/local/lib/php/extensions/ /usr/local/lib/php/extensions/
+COPY --from=builder /usr/local/etc/php/conf.d/ /usr/local/etc/php/conf.d/
 
 # PHP config
 COPY docker/php/php.ini /usr/local/etc/php/conf.d/zz-custom.ini
