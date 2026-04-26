@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: astc-revigny
+    runtime: docker
+    dockerfilePath: ./Dockerfile.prod
+    plan: free
+    healthCheckPath: /
+    envVars:
+      - key: APP_ENV
+        value: prod
+      - key: APP_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        sync: false        # à renseigner dans le dashboard Render
+      - key: MAILER_DSN
+        value: "null://null"

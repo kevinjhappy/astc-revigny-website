@@ -1,0 +1,15 @@
+node_modules/
+var/
+.git/
+.gitignore
+docker-compose.yml
+docker/nginx/default.conf
+graphify-out/
+docs/
+images/
+tests/
+phpunit.xml.dist
+.env.local
+.env.*.local
+README.md
+CLAUDE.md

@@ -1,0 +1,60 @@
+# ── Build stage ──────────────────────────────────────────────────────────────
+FROM php:8.3-fpm-alpine AS builder
+
+RUN apk add --no-cache \
+    git unzip icu-dev libzip-dev oniguruma-dev \
+    autoconf g++ make linux-headers nodejs npm
+
+RUN docker-php-ext-install intl pdo pdo_mysql opcache zip \
+ && pecl install apcu && docker-php-ext-enable apcu
+
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+WORKDIR /var/www/app
+
+# PHP deps (cached layer if composer.json unchanged)
+COPY composer.json composer.lock symfony.lock ./
+RUN APP_ENV=prod composer install \
+    --no-dev --optimize-autoloader --no-interaction --no-scripts
+
+# JS deps & assets build (cached layer if package.json unchanged)
+COPY package.json package-lock.json webpack.config.js ./
+RUN npm ci
+
+COPY assets/ assets/
+RUN npm run build
+
+# Copy rest of the codebase, then finalise Composer
+COPY . .
+RUN APP_ENV=prod composer dump-autoload --optimize --no-dev
+
+# ── Runtime stage ─────────────────────────────────────────────────────────────
+FROM php:8.3-fpm-alpine
+
+RUN apk add --no-cache nginx supervisor icu-dev libzip-dev oniguruma-dev
+
+RUN docker-php-ext-install intl pdo pdo_mysql opcache zip \
+ && pecl install apcu && docker-php-ext-enable apcu
+
+# PHP config
+COPY docker/php/php.ini /usr/local/etc/php/conf.d/zz-custom.ini
+COPY docker/php/opcache.ini /usr/local/etc/php/conf.d/zz-opcache.ini
+
+WORKDIR /var/www/app
+COPY --from=builder /var/www/app /var/www/app
+
+# Nginx
+COPY docker/nginx/render.conf /etc/nginx/http.d/default.conf
+
+# Supervisor
+COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# Startup
+COPY docker/start.sh /start.sh
+RUN chmod +x /start.sh
+
+RUN mkdir -p var/cache var/log \
+ && chown -R www-data:www-data var/
+
+EXPOSE 80
+CMD ["/start.sh"]
