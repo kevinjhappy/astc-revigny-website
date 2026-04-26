@@ -1,0 +1,52 @@
+{% extends "base_admin.html.twig" %}
+{% block title %}Actualités{% endblock %}
+{% block body %}
+  <h1>Actualités</h1>
+    <h2>Seuls les {{ newsCount }} actualités les plus récentes sont affichés</h2>
+  <a class="btn" href="{{ path('admin_post_new') }}">+ Nouvelle actualité</a>
+
+  <table style="margin-top:1rem">
+    <thead>
+      <tr>
+        <th>Titre</th>
+        <th>Contenu</th>
+        <th>Statut</th>
+        <th>Publié le</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for post in posts %}
+      <tr>
+        <td>{{ post.title }}</td>
+        <td>{{ post.content|u.truncate(70, ' (...)')  }}</td>
+        <td>{{ post.status.value }}</td>
+        <td>{{ post.publishedAt ? post.publishedAt|date('d/m/Y H:i') : '—' }}</td>
+        <td style="white-space:nowrap">
+          <a href="{{ path('admin_post_edit', {id: post.id}) }}" class="btn" style="background:#1A2B6D">Éditer</a>
+
+          {% if post.status.value == 'DRAFT' %}
+            <form method="post" action="{{ path('admin_post_publish', {id: post.id}) }}" style="display:inline">
+              <input type="hidden" name="_token" value="{{ csrf_token('pub' ~ post.id) }}">
+              <button style="background:#28a745">Publier</button>
+            </form>
+          {% else %}
+            <form method="post" action="{{ path('admin_post_unpublish', {id: post.id}) }}" style="display:inline">
+              <input type="hidden" name="_token" value="{{ csrf_token('unp' ~ post.id) }}">
+              <button style="background:#6c757d">Dépublier</button>
+            </form>
+          {% endif %}
+
+          <form method="post" action="{{ path('admin_post_delete', {id: post.id}) }}" style="display:inline">
+            <input type="hidden" name="_token" value="{{ csrf_token('del' ~ post.id) }}">
+            <button style="background:#dc3545"
+                    data-confirm="Supprimer définitivement « {{ post.title }} » ?">Supprimer</button>
+          </form>
+        </td>
+      </tr>
+    {% else %}
+      <tr><td colspan="4">Aucune actualité.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

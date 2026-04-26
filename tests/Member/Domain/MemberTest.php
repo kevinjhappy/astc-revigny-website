@@ -27,7 +27,7 @@ final class MemberTest extends TestCase
     public function test_update(): void
     {
         $m = Member::create(Uuid::generate(), 'A', 'B', PhoneNumber::fromString('0612345678'), null);
-        $m->update('New', 'Name', PhoneNumber::fromString('0798765432'), Email::fromString('x@y.fr'));
+        $m->update('New', 'Name', PhoneNumber::fromString('0798765432'), Email::fromString('x@y.fr'), null);
         self::assertSame('New', $m->lastName());
         self::assertSame('+33798765432', (string)$m->phone());
     }

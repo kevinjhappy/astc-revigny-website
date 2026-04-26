@@ -2,6 +2,7 @@
 {% block title %}Membres du club{% endblock %}
 {% block body %}
   <h1>Membres du club</h1>
+  <h2>{{ members|length }} Membres</h2>
   <form method="get" style="margin-bottom:1rem">
     <input name="q" value="{{ q }}" placeholder="Rechercher par nom, prénom, téléphone…" style="width: 20rem; height: 2rem;">
     <button type="submit">Rechercher</button>

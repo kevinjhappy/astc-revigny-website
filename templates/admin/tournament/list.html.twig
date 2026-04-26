@@ -1,11 +1,11 @@
 {% extends "base_admin.html.twig" %}
 {% block title %}Tournois{% endblock %}
 {% block body %}
+    {% set active = tournaments|filter(t => t.status.value != 'CLOSED') %}
+    {% set closed = tournaments|filter(t => t.status.value == 'CLOSED') %}
   <h1>Tournois</h1>
+  <h2>{{ active|length }} actifs</h2>
   <a class="btn" href="{{ path("admin_tournament_new") }}">+ Nouveau tournoi</a>
-
-  {% set active = tournaments|filter(t => t.status.value != 'CLOSED') %}
-  {% set closed = tournaments|filter(t => t.status.value == 'CLOSED') %}
 
   <table style="margin-top:1rem">
     <thead><tr><th>Nom</th><th>Début</th><th>Type</th><th>Statut</th><th>Max</th><th></th></tr></thead>
