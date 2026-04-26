@@ -24,10 +24,14 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_ADMIN')]
 final class PostController extends AbstractController
 {
+    public function __construct(private int $newsCount)
+    {
+    }
+
     #[Route('', name: 'admin_post_list', methods: ['GET'])]
     public function list(PostRepository $repo): Response
     {
-        return $this->render('admin/post/list.html.twig', ['posts' => $repo->all()]);
+        return $this->render('admin/post/list.html.twig', ['posts' => $repo->all(), 'newsCount' => $this->newsCount]);
     }
 
     #[Route('/new', name: 'admin_post_new', methods: ['GET', 'POST'])]

@@ -2,6 +2,7 @@
 {% block title %}Actualités{% endblock %}
 {% block body %}
   <h1>Actualités</h1>
+    <h2>Seuls les {{ newsCount }} actualités les plus récentes sont affichés</h2>
   <a class="btn" href="{{ path('admin_post_new') }}">+ Nouvelle actualité</a>
 
   <table style="margin-top:1rem">

@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 final class HomeController extends AbstractController
 {
+    public function __construct(private int $newsCount){}
+
     #[Route('/', name: 'public_home', methods: ['GET'])]
     public function home(TournamentRepository $tRepo, RegistrationRepository $rRepo, PostRepository $postRepo): Response
     {
@@ -36,7 +38,7 @@ final class HomeController extends AbstractController
             'tournaments' => $openTournaments,
             'closedTournaments' => $closedTournaments,
             'galleryList' => $galleryList,
-            'newsPosts' => $postRepo->latestPublished(6),
+            'newsPosts' => $postRepo->latestPublished($this->newsCount),
         ]);
     }
 }
