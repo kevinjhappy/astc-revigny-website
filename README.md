@@ -69,3 +69,54 @@ Chaque contexte suit le pattern DDD : `Domain/` → `Application/` (CQRS) → `I
 | nginx    | 8080      |
 | mysql    | 3306      |
 | mailpit  | 8026 (UI) |
+
+## Déploiement (Alwaysdata)
+
+Le site est hébergé sur [Alwaysdata](https://www.alwaysdata.com) (plan gratuit, Apache, PHP 8.3, MySQL 8).
+
+### Prérequis — Panel Alwaysdata (une seule fois)
+
+1. Créer une base de données MySQL dans **Bases de données → MySQL**
+2. Vérifier que PHP 8.3 est actif dans **Sites → configuration PHP**
+3. Définir le **Document Root** du site vers `/home/LOGIN/www/astc-revigny/public`
+4. Ajouter votre clé SSH publique dans **Accès SSH**
+
+### Premier déploiement (une seule fois)
+
+```bash
+# Se connecter en SSH
+ssh LOGIN@ssh-LOGIN.alwaysdata.net
+
+# Cloner le dépôt
+git clone git@github.com:kevinjhappy/astc-revigny-website.git ~/www/astc-revigny
+cd ~/www/astc-revigny
+
+# Créer et remplir le fichier d'environnement prod
+cp .env.prod.example .env.local
+nano .env.local  # remplacer APP_SECRET, DATABASE_URL et DEFAULT_URI avec les vraies valeurs
+
+# Installer les dépendances PHP
+composer install --no-dev --optimize-autoloader --no-interaction
+
+# Appliquer les migrations
+php bin/console doctrine:migrations:migrate --no-interaction --env=prod
+
+# Créer le compte administrateur
+php bin/console app:create-admin admin@astc-revigny.fr motdepasse_solide
+```
+
+### Redéploiement (à chaque mise à jour)
+
+```bash
+# 1. En local — si des fichiers JS/CSS ont changé : rebuilder et commiter les assets
+npm run build
+git add public/build/
+git commit -m "build: assets"
+git push origin main
+
+# 2. En local — éditer SSH_USER dans deploy.sh si c'est la première fois
+# 3. Déployer sur le serveur (git fetch/reset + composer + migrations + cache)
+./deploy.sh
+```
+
+> **Note :** Si seul le code PHP a changé (pas d'assets), on peut passer directement à `./deploy.sh` sans l'étape npm.
