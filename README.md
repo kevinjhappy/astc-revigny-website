@@ -109,7 +109,7 @@ php bin/console app:create-admin admin@astc-revigny.fr motdepasse_solide
 
 ```bash
 # 1. En local — si des fichiers JS/CSS ont changé : rebuilder et commiter les assets
-npm run build
+docker compose exec php npm run build
 git add public/build/
 git commit -m "build: assets"
 git push origin main
