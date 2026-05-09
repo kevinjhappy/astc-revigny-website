@@ -93,7 +93,7 @@ cd ~/www/astc-revigny
 
 # Créer et remplir le fichier d'environnement prod
 cp .env.prod.example .env.local
-nano .env.local  # remplacer APP_SECRET, DATABASE_URL et DEFAULT_URI avec les vraies valeurs
+nano .env.local  # remplacer APP_SECRET, DATABASE_URL et DEFAULT_URI ; configurer MAILER_DSN si les emails sont nécessaires
 
 # Installer les dépendances PHP
 composer install --no-dev --optimize-autoloader --no-interaction
