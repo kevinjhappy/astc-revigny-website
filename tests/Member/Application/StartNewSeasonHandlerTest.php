@@ -61,9 +61,13 @@ final class StartNewSeasonHandlerTest extends TestCase
     {
         $repo = $this->makeRepo();
         $repo->save(MemberSubscription::create(Uuid::generate(), 'm1', '2025-2026', MembershipType::TERRAIN, SubscriptionStatus::PAID));
+        $repo->save(MemberSubscription::create(Uuid::generate(), 'm2', '2025-2026', MembershipType::TERRAIN_TOURNOIS, SubscriptionStatus::PAID));
         $handler = new StartNewSeasonHandler($repo);
         ($handler)(new StartNewSeasonCommand('2026-2027'));
         ($handler)(new StartNewSeasonCommand('2026-2027'));
-        self::assertCount(2, $repo->store);
+        // Original 2 + 2 new (one per paid member, not doubled)
+        self::assertCount(4, $repo->store);
+        self::assertNotNull($repo->findByMemberAndSeason('m1', '2026-2027'));
+        self::assertNotNull($repo->findByMemberAndSeason('m2', '2026-2027'));
     }
 }

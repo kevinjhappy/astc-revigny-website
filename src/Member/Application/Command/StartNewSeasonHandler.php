@@ -12,11 +12,11 @@ final class StartNewSeasonHandler
 
     public function __invoke(StartNewSeasonCommand $c): void
     {
-        if ($this->repo->hasAnySeason($c->season)) {
-            return;
-        }
         $previousSeason = $this->previousSeason($c->season);
         foreach ($this->repo->findPaidBySeason($previousSeason) as $old) {
+            if ($this->repo->findByMemberAndSeason($old->memberId(), $c->season) !== null) {
+                continue;
+            }
             $this->repo->save(MemberSubscription::create(
                 Uuid::generate(), $old->memberId(), $c->season, $old->type(), SubscriptionStatus::PENDING,
             ));
