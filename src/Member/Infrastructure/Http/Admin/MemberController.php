@@ -14,6 +14,7 @@ use App\Member\Application\Command\UpdateMemberHandler;
 use App\Member\Application\Command\UpdateMemberSubscriptionCommand;
 use App\Member\Application\Command\UpdateMemberSubscriptionHandler;
 use App\Member\Domain\MemberRepository;
+use App\Member\Domain\MembershipType;
 use App\Member\Domain\MemberSubscriptionRepository;
 use App\Member\Domain\SeasonHelper;
 use App\Member\Domain\SubscriptionStatus;
@@ -150,8 +151,16 @@ final class MemberController extends AbstractController
     }
 
     #[Route("/import", name: "admin_member_import", methods: ["GET", "POST"])]
-    public function import(Request $r, CreateMemberHandler $h): Response
-    {
+    public function import(
+        Request $r,
+        CreateMemberHandler $h,
+        UpdateMemberHandler $updateHandler,
+        CreateMemberSubscriptionHandler $createSubHandler,
+        UpdateMemberSubscriptionHandler $updateSubHandler,
+        MemberRepository $repo,
+        MemberSubscriptionRepository $subRepo,
+        SeasonHelper $seasonHelper,
+    ): Response {
         if ($r->getMethod() === 'GET') {
             return $this->render('admin/member/import.html.twig');
         }
@@ -169,32 +178,130 @@ final class MemberController extends AbstractController
 
         $handle = fopen($file->getPathname(), 'r');
         $imported = 0;
-        $errors = [];
         $line = 0;
 
-        fgetcsv($handle, 0, ';');
+        $headers = array_map('trim', fgetcsv($handle, 0, ';') ?: []);
+        $isNewFormat = isset($headers[0]) && ($headers[0] === 'id' || $headers[0] === 'Nom');
 
-        while (($row = fgetcsv($handle, 0, ';')) !== false) {
-            $line++;
-            if (count($row) < 3) {
-                $errors[] = "Ligne $line : colonnes insuffisantes, ignorée.";
-                continue;
+        if ($isNewFormat) {
+            $colIndex = array_flip($headers);
+            $season = $seasonHelper->currentSeason();
+
+            while (($raw = fgetcsv($handle, 0, ';')) !== false) {
+                $line++;
+                $row = array_map('trim', $raw);
+
+                $idVal       = $row[$colIndex['id'] ?? -1] ?? '';
+                $lastName    = $row[$colIndex['Nom'] ?? -1] ?? '';
+                $firstName   = $row[$colIndex['Prénom'] ?? -1] ?? '';
+                $phone       = $row[$colIndex['Téléphone'] ?? -1] ?? '';
+                $email       = $row[$colIndex['Email'] ?? -1] ?? '';
+                $birthDate   = $row[$colIndex['Date de naissance'] ?? -1] ?? '';
+                $typeRaw     = $row[$colIndex['Type de cotisation'] ?? -1] ?? '';
+                $statusRaw   = $row[$colIndex['Statut paiement'] ?? -1] ?? '';
+
+                if ($lastName === '' || $phone === '') {
+                    $this->addFlash('error', "Ligne $line : nom ou téléphone manquant, ignorée.");
+                    continue;
+                }
+
+                $member = null;
+                if ($idVal !== '') {
+                    try {
+                        $member = $repo->get(Uuid::fromString($idVal));
+                    } catch (\Throwable) {
+                        $this->addFlash('error', "Ligne $line : UUID invalide « $idVal », ignorée.");
+                        continue;
+                    }
+                }
+                if ($member === null) {
+                    $member = $repo->findByLastNameAndPhone($lastName, $phone);
+                }
+
+                try {
+                    if ($member !== null) {
+                        $updateHandler(new UpdateMemberCommand(
+                            (string)$member->id(),
+                            $lastName,
+                            $firstName !== '' ? $firstName : $member->firstName(),
+                            $phone,
+                            $email !== '' ? $email : ($member->email() ? (string)$member->email() : null),
+                            $birthDate !== '' ? $birthDate : $member->birthDate()?->format('d/m/Y'),
+                        ));
+                        $memberId = (string)$member->id();
+                    } else {
+                        $newId = $h(new CreateMemberCommand($lastName, $firstName, $phone, $email ?: null, $birthDate ?: null));
+                        $memberId = (string)$newId;
+                    }
+                    $imported++;
+                } catch (\Throwable $e) {
+                    $this->addFlash('error', "Ligne $line ($firstName $lastName) : " . $e->getMessage());
+                    continue;
+                }
+
+                if ($typeRaw === '' || $typeRaw === '—') {
+                    continue;
+                }
+
+                $membershipType = MembershipType::tryFrom($typeRaw);
+                if ($membershipType === null) {
+                    foreach (MembershipType::cases() as $case) {
+                        if ($case->label() === $typeRaw) {
+                            $membershipType = $case;
+                            break;
+                        }
+                    }
+                }
+                if ($membershipType === null) {
+                    $this->addFlash('error', "Ligne $line : type de cotisation inconnu « $typeRaw », abonnement ignoré.");
+                    continue;
+                }
+
+                $status = SubscriptionStatus::tryFrom($statusRaw);
+                if ($status === null) {
+                    foreach (SubscriptionStatus::cases() as $case) {
+                        if ($case->label() === $statusRaw) {
+                            $status = $case;
+                            break;
+                        }
+                    }
+                }
+                $status ??= SubscriptionStatus::PENDING;
+
+                try {
+                    $existingSub = $subRepo->findByMemberAndSeason($memberId, $season);
+                    if ($existingSub !== null) {
+                        $updateSubHandler(new UpdateMemberSubscriptionCommand((string)$existingSub->id(), $membershipType, $status));
+                    } else {
+                        $createSubHandler(new CreateMemberSubscriptionCommand($memberId, $season, $membershipType, $status));
+                    }
+                } catch (\Throwable $e) {
+                    $this->addFlash('error', "Ligne $line ($firstName $lastName) abonnement : " . $e->getMessage());
+                }
             }
+        } else {
+            while (($row = fgetcsv($handle, 0, ';')) !== false) {
+                $line++;
+                if (count($row) < 3) {
+                    $this->addFlash('error', "Ligne $line : colonnes insuffisantes, ignorée.");
+                    continue;
+                }
 
-            [$firstName, $lastName, $phone] = array_map('trim', $row);
-            $email = isset($row[3]) ? trim($row[3]) : null;
-            $birthDate = isset($row[4]) ? trim($row[4]) : null;
+                [$firstName, $lastName, $phone] = array_map('trim', $row);
+                $email     = isset($row[3]) ? trim($row[3]) : null;
+                $birthDate = isset($row[4]) ? trim($row[4]) : null;
 
-            if ($firstName === '' || $lastName === '' || $phone === '') {
-                $errors[] = "Ligne $line : prénom, nom ou téléphone manquant, ignorée.";
-                continue;
-            }
+                if ($firstName === '' || $lastName === '' || $phone === '') {
+                    $this->addFlash('error', "Ligne $line : prénom, nom ou téléphone manquant, ignorée.");
+                    continue;
+                }
 
-            try {
-                $h(new CreateMemberCommand($lastName, $firstName, $phone, $email ?: null, $birthDate ?: null));
-                $imported++;
-            } catch (\Throwable $e) {
-                $errors[] = "Ligne $line ($firstName $lastName) : " . $e->getMessage();
+                try {
+                    $h(new CreateMemberCommand($lastName, $firstName, $phone, $email ?: null, $birthDate ?: null));
+                    $imported++;
+                } catch (\Throwable $e) {
+                    $this->addFlash('error', "Ligne $line ($firstName $lastName) : " . $e->getMessage());
+                }
             }
         }
 
@@ -202,9 +309,6 @@ final class MemberController extends AbstractController
 
         if ($imported > 0) {
             $this->addFlash('success', "$imported membre(s) importé(s) avec succès.");
-        }
-        foreach ($errors as $err) {
-            $this->addFlash('error', $err);
         }
 
         return $this->redirectToRoute('admin_member_list');
