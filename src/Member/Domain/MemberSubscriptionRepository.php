@@ -6,6 +6,7 @@ use App\Shared\Domain\ValueObject\Uuid;
 interface MemberSubscriptionRepository
 {
     public function save(MemberSubscription $subscription): void;
+    public function remove(MemberSubscription $subscription): void;
     public function get(Uuid $id): ?MemberSubscription;
     public function findByMemberAndSeason(string $memberId, string $season): ?MemberSubscription;
     /** @return MemberSubscription[] */

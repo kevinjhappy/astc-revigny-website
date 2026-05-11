@@ -16,7 +16,7 @@ class MemberSubscription
     #[ORM\Column(type: 'string', length: 36)]
     private string $memberId;
 
-    #[ORM\Column(type: 'string', length: 9)]
+    #[ORM\Column(type: 'string', length: 20)]
     private string $season;
 
     #[ORM\Column(type: 'string', length: 30, enumType: MembershipType::class)]
