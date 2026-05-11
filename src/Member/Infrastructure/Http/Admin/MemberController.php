@@ -199,6 +199,8 @@ final class MemberController extends AbstractController
                 $birthDate   = $row[$colIndex['Date de naissance'] ?? -1] ?? '';
                 $typeRaw     = $row[$colIndex['Type de cotisation'] ?? -1] ?? '';
                 $statusRaw   = $row[$colIndex['Statut paiement'] ?? -1] ?? '';
+                $seasonRaw   = $row[$colIndex['Saison'] ?? -1] ?? '';
+                $rowSeason   = ($seasonRaw !== '' && $seasonRaw !== '—') ? $seasonRaw : $season;
 
                 if ($lastName === '' || $phone === '') {
                     $this->addFlash('error', "Ligne $line : nom ou téléphone manquant, ignorée.");
@@ -272,11 +274,11 @@ final class MemberController extends AbstractController
                 $status ??= SubscriptionStatus::PENDING;
 
                 try {
-                    $existingSub = $subRepo->findByMemberAndSeason($memberId, $season);
+                    $existingSub = $subRepo->findByMemberAndSeason($memberId, $rowSeason);
                     if ($existingSub !== null) {
                         $updateSubHandler(new UpdateMemberSubscriptionCommand((string)$existingSub->id(), $membershipType, $status));
                     } else {
-                        $createSubHandler(new CreateMemberSubscriptionCommand($memberId, $season, $membershipType, $status));
+                        $createSubHandler(new CreateMemberSubscriptionCommand($memberId, $rowSeason, $membershipType, $status));
                     }
                 } catch (\Throwable $e) {
                     $this->addFlash('error', "Ligne $line ($firstName $lastName) abonnement : " . $e->getMessage());
