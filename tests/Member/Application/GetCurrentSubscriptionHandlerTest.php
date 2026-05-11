@@ -12,7 +12,6 @@ use App\Member\Domain\MemberSubscription;
 use App\Member\Domain\MemberSubscriptionRepository;
 use App\Member\Domain\MembershipType;
 use App\Member\Domain\SeasonHelper;
-use App\Member\Domain\SubscriptionStatus;
 use App\Shared\Domain\ValueObject\Uuid;
 use PHPUnit\Framework\TestCase;
 
@@ -46,17 +45,18 @@ final class GetCurrentSubscriptionHandlerTest extends TestCase
         $now = new \DateTimeImmutable('2026-05-01');
         $sub = MemberSubscription::create(Uuid::generate(), 'm1', '2025-2026', MembershipType::TERRAIN_TOURNOIS);
         $repo = $this->makeRepo([$sub]);
-        $handler = new GetCurrentSubscriptionHandler($repo, new SeasonHelper());
-        $result = ($handler)(new GetCurrentSubscriptionQuery('m1'), $now);
+        $handler = new GetCurrentSubscriptionHandler($repo, new SeasonHelper(), $now);
+        $result = ($handler)(new GetCurrentSubscriptionQuery('m1'));
         self::assertSame($sub, $result);
     }
 
     public function test_returns_null_when_no_subscription(): void
     {
+        // May (month 5) < 9, so currentSeason() yields '2025-2026'
         $now = new \DateTimeImmutable('2026-05-01');
         $repo = $this->makeRepo([]);
-        $handler = new GetCurrentSubscriptionHandler($repo, new SeasonHelper());
-        self::assertNull(($handler)(new GetCurrentSubscriptionQuery('m1'), $now));
+        $handler = new GetCurrentSubscriptionHandler($repo, new SeasonHelper(), $now);
+        self::assertNull(($handler)(new GetCurrentSubscriptionQuery('m1')));
     }
 
     public function test_history_returns_all_subscriptions_for_member(): void

@@ -13,13 +13,14 @@ final class GetCurrentSubscriptionHandler
     public function __construct(
         private MemberSubscriptionRepository $repo,
         private SeasonHelper $seasonHelper,
+        private ?\DateTimeImmutable $now = null,
     ) {}
 
-    public function __invoke(GetCurrentSubscriptionQuery $q, ?\DateTimeImmutable $now = null): ?MemberSubscription
+    public function __invoke(GetCurrentSubscriptionQuery $q): ?MemberSubscription
     {
         return $this->repo->findByMemberAndSeason(
             $q->memberId,
-            $this->seasonHelper->currentSeason($now),
+            $this->seasonHelper->currentSeason($this->now),
         );
     }
 }
