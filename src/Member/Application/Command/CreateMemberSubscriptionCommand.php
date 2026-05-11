@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 namespace App\Member\Application\Command;
 
 use App\Member\Domain\MembershipType;
@@ -12,7 +9,7 @@ final class CreateMemberSubscriptionCommand
     public function __construct(
         public readonly string $memberId,
         public readonly string $season,
-        public readonly MembershipType $type,
+        public readonly MembershipType $membershipType,
         public readonly SubscriptionStatus $status = SubscriptionStatus::PENDING,
     ) {}
 }
