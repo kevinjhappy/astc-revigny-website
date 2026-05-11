@@ -14,6 +14,7 @@ final class ContactApiController extends AbstractController
 {
     private const string CONTACT_EMAIL = 'kevin.nadin@gmail.com';
 //    private const string CONTACT_EMAIL = 'vincent.pottelette@gmail.com';
+//    private const string CONTACT_EMAIL = 'astc-revigny@alwaysdata.net';
 
     #[Route('/api/contact', name: 'api_contact', methods: ['POST'])]
     public function contact(Request $r, MailerInterface $mailer, ValidatorInterface $v): JsonResponse
