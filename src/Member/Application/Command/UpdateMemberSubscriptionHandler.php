@@ -11,7 +11,7 @@ final class UpdateMemberSubscriptionHandler
     public function __invoke(UpdateMemberSubscriptionCommand $c): void
     {
         $sub = $this->repo->get(Uuid::fromString($c->subscriptionId))
-            ?? throw new \InvalidArgumentException("Subscription not found: {$c->subscriptionId}");
+            ?? throw new \DomainException("Souscription introuvable : {$c->subscriptionId}");
         $sub->update($c->membershipType, $c->status);
         $this->repo->save($sub);
     }

@@ -11,13 +11,11 @@ final class CreateMemberSubscriptionHandler
 
     public function __invoke(CreateMemberSubscriptionCommand $c): void
     {
-        $sub = MemberSubscription::create(
-            Uuid::generate(),
-            $c->memberId,
-            $c->season,
-            $c->membershipType,
-            $c->status,
-        );
-        $this->repo->save($sub);
+        if ($this->repo->findByMemberAndSeason($c->memberId, $c->season) !== null) {
+            throw new \DomainException("Une souscription existe déjà pour ce membre pour la saison {$c->season}.");
+        }
+        $this->repo->save(MemberSubscription::create(
+            Uuid::generate(), $c->memberId, $c->season, $c->membershipType, $c->status,
+        ));
     }
 }
