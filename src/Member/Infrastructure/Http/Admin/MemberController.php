@@ -213,8 +213,11 @@ final class MemberController extends AbstractController
                         $this->addFlash('error', "Ligne $line : UUID invalide « $idVal », ignorée.");
                         continue;
                     }
-                }
-                if ($member === null) {
+                    if ($member === null) {
+                        $this->addFlash('error', "Ligne $line : aucun membre pour l'identifiant « $idVal », ignorée.");
+                        continue;
+                    }
+                } else {
                     $member = $repo->findByLastNameAndPhone($lastName, $phone);
                 }
 
