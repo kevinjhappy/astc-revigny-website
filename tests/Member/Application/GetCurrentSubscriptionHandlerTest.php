@@ -42,6 +42,7 @@ final class GetCurrentSubscriptionHandlerTest extends TestCase
 
     public function test_returns_current_season_subscription(): void
     {
+        // May (month 5) < 9, so currentSeason() yields '2025-2026'
         $now = new \DateTimeImmutable('2026-05-01');
         $sub = MemberSubscription::create(Uuid::generate(), 'm1', '2025-2026', MembershipType::TERRAIN_TOURNOIS);
         $repo = $this->makeRepo([$sub]);

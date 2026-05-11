@@ -10,6 +10,7 @@ final class GetSubscriptionHistoryHandler
 {
     public function __construct(private MemberSubscriptionRepository $repo) {}
 
+    /** @return \App\Member\Domain\MemberSubscription[] */
     public function __invoke(GetSubscriptionHistoryQuery $q): array
     {
         return $this->repo->findByMember($q->memberId);
