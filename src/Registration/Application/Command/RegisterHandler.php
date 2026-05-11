@@ -24,8 +24,7 @@ class RegisterHandler {
         if ($t->status() !== TournamentStatus::PUBLISHED)
             throw new \DomainException('Tournament is not open for registration');
         if ($t->type() === TournamentType::MEMBERS_ONLY) {
-            if (!($this->matchMember)(new MatchMemberQuery($c->lastName, $c->phone)))
-                throw new \DomainException('Ce tournoi est réservé aux membres du club');
+            ($this->matchMember)(new MatchMemberQuery($c->lastName, $c->phone));
         }
         $confirmedCount = $this->registrations->countConfirmed($t->id());
         $status = $confirmedCount >= $t->maxParticipants() ? RegistrationStatus::WAITING_LIST : RegistrationStatus::PENDING;

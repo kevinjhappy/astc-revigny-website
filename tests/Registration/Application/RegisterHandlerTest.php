@@ -56,7 +56,12 @@ final class RegisterHandlerTest extends TestCase
         $match = new class extends MatchMemberHandler {
             public function __construct() {}
             public bool $ok = true;
-            public function __invoke(MatchMemberQuery $q): bool { return $this->ok; }
+            public function __invoke(MatchMemberQuery $q): bool {
+                if (!$this->ok) {
+                    throw new \DomainException('Ce tournoi est réservé aux membres du club.');
+                }
+                return true;
+            }
         };
         return [$tRepo, $rRepo, $match];
     }
