@@ -156,6 +156,11 @@ final class MemberController extends AbstractController
             return $this->render('admin/member/import.html.twig');
         }
 
+        if (!$this->isCsrfTokenValid('member-import', $r->request->get('_token'))) {
+            $this->addFlash('error', 'Token CSRF invalide.');
+            return $this->redirectToRoute('admin_member_import');
+        }
+
         $file = $r->files->get('csv');
         if (!$file) {
             $this->addFlash('error', 'Aucun fichier sélectionné.');

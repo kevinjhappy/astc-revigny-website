@@ -8,6 +8,7 @@
     Les colonnes <em>Email</em> et <em>date de naissance</em> sont optionnelles. La date de naissance doit être au format <strong>JJ/MM/AAAA</strong>.
   </p>
   <form method="post" enctype="multipart/form-data" style="max-width:480px">
+    <input type="hidden" name="_token" value="{{ csrf_token('member-import') }}">
     <label for="csv">Fichier CSV</label>
     <input type="file" id="csv" name="csv" accept=".csv,text/csv" required style="margin-bottom:1rem">
     <button type="submit">Importer</button>

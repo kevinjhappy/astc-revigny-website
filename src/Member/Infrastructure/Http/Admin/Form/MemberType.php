@@ -8,6 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
 final class MemberType extends AbstractType
@@ -36,11 +37,16 @@ final class MemberType extends AbstractType
           ->add('subscriptionStatus', ChoiceType::class, [
               'label' => 'Statut paiement',
               'required' => false,
-              'choices' => [
-                  'En attente' => SubscriptionStatus::PENDING,
-                  'Payé' => SubscriptionStatus::PAID,
-              ],
+              'choices' => array_combine(
+                  array_map(fn($s) => $s->label(), SubscriptionStatus::cases()),
+                  SubscriptionStatus::cases(),
+              ),
               'placeholder' => '— Sélectionner —',
           ]);
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults(['data_class' => null]);
     }
 }
