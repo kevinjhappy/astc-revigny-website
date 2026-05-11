@@ -11,6 +11,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.7",
         "doctrine/orm": "^3.6",
         "giggsey/libphonenumber-for-php": "^9.0",
+        "phpoffice/phpspreadsheet": "^5.7",
         "ramsey/uuid": "^4.9",
         "symfony/apache-pack": "^1.0.1",
         "symfony/asset": "7.4.*",
