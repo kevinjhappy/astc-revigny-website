@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Tests\Registration\Application;
 
 use App\Member\Application\Query\MatchMemberHandler;

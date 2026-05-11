@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Registration\Application\Command;
 use App\Member\Application\Query\MatchMemberHandler;
 use App\Member\Application\Query\MatchMemberQuery;
@@ -20,9 +23,9 @@ class RegisterHandler {
     public function __invoke(RegisterCommand $c): RegisterResult
     {
         $t = $this->tournaments->get(Uuid::fromString($c->tournamentId))
-            ?? throw new \DomainException('Tournament not found');
+            ?? throw new \DomainException('Tournoi introuvable.');
         if ($t->status() !== TournamentStatus::PUBLISHED)
-            throw new \DomainException('Tournament is not open for registration');
+            throw new \DomainException('Ce tournoi n\'est pas ouvert aux inscriptions.');
         if ($t->type() === TournamentType::MEMBERS_ONLY) {
             ($this->matchMember)(new MatchMemberQuery($c->lastName, $c->phone));
         }

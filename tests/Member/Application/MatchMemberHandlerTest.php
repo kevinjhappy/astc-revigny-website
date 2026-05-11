@@ -89,6 +89,7 @@ final class MatchMemberHandlerTest extends TestCase
         );
         $h = new MatchMemberHandler($this->memberRepo(true), $this->subRepo($sub), new SeasonHelper());
         $this->expectException(\DomainException::class);
+        $this->expectExceptionMessageMatches('/accès aux tournois/');
         ($h)(new MatchMemberQuery('Dupont', '0612345678'));
     }
 
