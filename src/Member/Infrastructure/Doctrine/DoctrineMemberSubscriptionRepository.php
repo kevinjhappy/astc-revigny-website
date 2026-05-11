@@ -1,5 +1,7 @@
 <?php
-// src/Member/Infrastructure/Doctrine/DoctrineMemberSubscriptionRepository.php
+
+declare(strict_types=1);
+
 namespace App\Member\Infrastructure\Doctrine;
 
 use App\Member\Domain\MemberSubscription;
