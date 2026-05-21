@@ -1,9 +1,12 @@
 <?php
+
 namespace App\Tournament\Domain;
+
 use App\Shared\Domain\ValueObject\Uuid;
+
 interface TournamentRepository
 {
-    public function save(Tournament $t): void;
+    public function save(Tournament $tournament): void;
     public function get(Uuid $id): ?Tournament;
     /** @return Tournament[] */
     public function all(): array;

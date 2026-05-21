@@ -13,15 +13,19 @@ final class StartNewSeasonHandler
 {
     public function __construct(private MemberSubscriptionRepository $repo) {}
 
-    public function __invoke(StartNewSeasonCommand $c): void
+    public function __invoke(StartNewSeasonCommand $command): void
     {
-        $previousSeason = $this->previousSeason($c->season);
-        foreach ($this->repo->findPaidBySeason($previousSeason) as $old) {
-            if ($this->repo->findByMemberAndSeason($old->memberId(), $c->season) !== null) {
+        $previousSeason = $this->previousSeason($command->season);
+        foreach ($this->repo->findPaidBySeason($previousSeason) as $subscription) {
+            if ($this->repo->findByMemberAndSeason($subscription->memberId(), $command->season) !== null) {
                 continue;
             }
             $this->repo->save(MemberSubscription::create(
-                Uuid::generate(), $old->memberId(), $c->season, $old->type(), SubscriptionStatus::PENDING,
+                Uuid::generate(),
+                $subscription->memberId(),
+                $command->season,
+                $subscription->type(),
+                SubscriptionStatus::PENDING,
             ));
         }
     }

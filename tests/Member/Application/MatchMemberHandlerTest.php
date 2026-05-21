@@ -32,28 +32,29 @@ final class MatchMemberHandlerTest extends TestCase
     private function memberRepo(bool $found): MemberRepository
     {
         $member = $found ? $this->member : null;
+
         return new class($member) implements MemberRepository {
-            public function __construct(private ?Member $m) {}
-            public function save(Member $m): void {}
-            public function remove(Member $m): void {}
+            public function __construct(private ?Member $member) {}
+            public function save(Member $member): void {}
+            public function remove(Member $member): void {}
             public function get(Uuid $id): ?Member { return null; }
-            public function search(?string $q): array { return []; }
-            public function findByLastNameAndPhone(string $l, PhoneNumber $p): ?Member { return $this->m; }
+            public function search(?string $query): array { return []; }
+            public function findByLastNameAndPhone(string $lastName, PhoneNumber $phoneNumber): ?Member { return $this->member; }
         };
     }
 
-    private function subRepo(?MemberSubscription $sub): MemberSubscriptionRepository
+    private function subRepo(?MemberSubscription $subscription): MemberSubscriptionRepository
     {
-        return new class($sub) implements MemberSubscriptionRepository {
-            public function __construct(private ?MemberSubscription $sub) {}
-            public function save(MemberSubscription $s): void {}
-            public function remove(MemberSubscription $s): void {}
+        return new class($subscription) implements MemberSubscriptionRepository {
+            public function __construct(private ?MemberSubscription $subscription) {}
+            public function save(MemberSubscription $subscription): void {}
+            public function remove(MemberSubscription $subscription): void {}
             public function get(Uuid $id): ?MemberSubscription { return null; }
-            public function findByMemberAndSeason(string $m, string $s): ?MemberSubscription { return $this->sub; }
-            public function findPaidBySeason(string $s): array { return []; }
-            public function findByMember(string $m): array { return []; }
-            public function findBySeason(string $s): array { return []; }
-            public function hasAnySeason(string $s): bool { return false; }
+            public function findByMemberAndSeason(string $memberId, string $season): ?MemberSubscription { return $this->subscription; }
+            public function findPaidBySeason(string $season): array { return []; }
+            public function findByMember(string $memberId): array { return []; }
+            public function findBySeason(string $season): array { return []; }
+            public function hasAnySeason(string $season): bool { return false; }
         };
     }
 
@@ -67,18 +68,18 @@ final class MatchMemberHandlerTest extends TestCase
 
     public function test_throws_when_member_not_found(): void
     {
-        $h = new MatchMemberHandler($this->memberRepo(false), $this->subRepo(null), new SeasonHelper());
+        $handler = new MatchMemberHandler($this->memberRepo(false), $this->subRepo(null), new SeasonHelper());
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessageMatches('/membres du club/');
-        ($h)(new MatchMemberQuery('Dupont', '0612345678'));
+        ($handler)(new MatchMemberQuery('Dupont', '0612345678'));
     }
 
     public function test_throws_when_no_subscription_for_current_season(): void
     {
-        $h = new MatchMemberHandler($this->memberRepo(true), $this->subRepo(null), new SeasonHelper());
+        $handler = new MatchMemberHandler($this->memberRepo(true), $this->subRepo(null), new SeasonHelper());
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessageMatches('/accès aux tournois/');
-        ($h)(new MatchMemberQuery('Dupont', '0612345678'));
+        ($handler)(new MatchMemberQuery('Dupont', '0612345678'));
     }
 
     public function test_throws_when_subscription_is_pending(): void
@@ -87,10 +88,10 @@ final class MatchMemberHandlerTest extends TestCase
             Uuid::generate(), (string)$this->memberId, '2025-2026',
             MembershipType::TERRAIN_TOURNOIS, SubscriptionStatus::PENDING
         );
-        $h = new MatchMemberHandler($this->memberRepo(true), $this->subRepo($sub), new SeasonHelper());
+        $handler = new MatchMemberHandler($this->memberRepo(true), $this->subRepo($sub), new SeasonHelper());
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessageMatches('/accès aux tournois/');
-        ($h)(new MatchMemberQuery('Dupont', '0612345678'));
+        ($handler)(new MatchMemberQuery('Dupont', '0612345678'));
     }
 
     public function test_throws_when_subscription_type_is_terrain_only(): void
@@ -99,20 +100,20 @@ final class MatchMemberHandlerTest extends TestCase
             Uuid::generate(), (string)$this->memberId, '2025-2026',
             MembershipType::TERRAIN, SubscriptionStatus::PAID
         );
-        $h = new MatchMemberHandler($this->memberRepo(true), $this->subRepo($sub), new SeasonHelper());
+        $handler = new MatchMemberHandler($this->memberRepo(true), $this->subRepo($sub), new SeasonHelper());
         $this->expectException(\DomainException::class);
-        ($h)(new MatchMemberQuery('Dupont', '0612345678'));
+        ($handler)(new MatchMemberQuery('Dupont', '0612345678'));
     }
 
     public function test_returns_true_when_paid_with_tournament_access(): void
     {
-        $h = new MatchMemberHandler($this->memberRepo(true), $this->subRepo($this->paidTournoisSub()), new SeasonHelper());
-        self::assertTrue(($h)(new MatchMemberQuery('Dupont', '0612345678')));
+        $handler = new MatchMemberHandler($this->memberRepo(true), $this->subRepo($this->paidTournoisSub()), new SeasonHelper());
+        self::assertTrue(($handler)(new MatchMemberQuery('Dupont', '0612345678')));
     }
 
     public function test_returns_true_without_tournament_access_check_when_flag_false(): void
     {
-        $h = new MatchMemberHandler($this->memberRepo(true), $this->subRepo(null), new SeasonHelper());
-        self::assertTrue(($h)(new MatchMemberQuery('Dupont', '0612345678', false)));
+        $handler = new MatchMemberHandler($this->memberRepo(true), $this->subRepo(null), new SeasonHelper());
+        self::assertTrue(($handler)(new MatchMemberQuery('Dupont', '0612345678', false)));
     }
 }

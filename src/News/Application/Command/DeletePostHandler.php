@@ -1,4 +1,5 @@
 <?php
+
 namespace App\News\Application\Command;
 
 use App\News\Domain\PostRepository;
@@ -8,8 +9,8 @@ final class DeletePostHandler
 {
     public function __construct(private PostRepository $repo) {}
 
-    public function __invoke(DeletePostCommand $c): void
+    public function __invoke(DeletePostCommand $command): void
     {
-        $this->repo->delete(Uuid::fromString($c->id));
+        $this->repo->delete(Uuid::fromString($command->id));
     }
 }

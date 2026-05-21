@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Tests\Tournament\Domain;
 
 use App\Shared\Domain\ValueObject\Uuid;
@@ -23,8 +24,9 @@ final class TournamentTest extends TestCase
 
     public function test_publish(): void
     {
-        $t = $this->make(); $t->publish();
-        self::assertSame(TournamentStatus::PUBLISHED, $t->status());
+        $tournament = $this->make();
+        $tournament->publish();
+        self::assertSame(TournamentStatus::PUBLISHED, $tournament->status());
     }
 
     public function test_cannot_publish_if_end_before_start(): void
@@ -37,8 +39,10 @@ final class TournamentTest extends TestCase
 
     public function test_close_from_published(): void
     {
-        $t = $this->make(); $t->publish(); $t->close();
-        self::assertSame(TournamentStatus::CLOSED, $t->status());
+        $tournament = $this->make();
+        $tournament->publish();
+        $tournament->close();
+        self::assertSame(TournamentStatus::CLOSED, $tournament->status());
     }
 
     public function test_cannot_close_draft(): void

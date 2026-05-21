@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Member\Application\Command;
 
 use App\Member\Domain\MemberRepository;
@@ -8,9 +9,11 @@ final class DeleteMemberHandler
 {
     public function __construct(private MemberRepository $repo) {}
 
-    public function __invoke(DeleteMemberCommand $c): void
+    public function __invoke(DeleteMemberCommand $command): void
     {
-        $m = $this->repo->get(Uuid::fromString($c->id));
-        if ($m) $this->repo->remove($m);
+        $member = $this->repo->get(Uuid::fromString($command->id));
+        if ($member) {
+            $this->repo->remove($member);
+        }
     }
 }

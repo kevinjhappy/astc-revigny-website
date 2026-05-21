@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Member\Application\Command;
 
 use App\Member\Domain\MemberSubscriptionRepository;
@@ -8,11 +11,11 @@ final class UpdateMemberSubscriptionHandler
 {
     public function __construct(private MemberSubscriptionRepository $repo) {}
 
-    public function __invoke(UpdateMemberSubscriptionCommand $c): void
+    public function __invoke(UpdateMemberSubscriptionCommand $command): void
     {
-        $sub = $this->repo->get(Uuid::fromString($c->subscriptionId))
-            ?? throw new \DomainException("Souscription introuvable : {$c->subscriptionId}");
-        $sub->update($c->membershipType, $c->status);
+        $sub = $this->repo->get(Uuid::fromString($command->subscriptionId))
+            ?? throw new \DomainException("Souscription introuvable : {$command->subscriptionId}");
+        $sub->update($command->membershipType, $command->status);
         $this->repo->save($sub);
     }
 }

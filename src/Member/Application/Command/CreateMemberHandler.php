@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Member\Application\Command;
 
 use App\Member\Domain\Member;
@@ -11,15 +12,16 @@ final class CreateMemberHandler
 {
     public function __construct(private MemberRepository $repo) {}
 
-    public function __invoke(CreateMemberCommand $c): Uuid
+    public function __invoke(CreateMemberCommand $command): Uuid
     {
         $id = Uuid::generate();
-        $birthDate = $c->birthDate ? \DateTimeImmutable::createFromFormat('d/m/Y', $c->birthDate) ?: null : null;
-        $m = Member::create($id, $c->lastName, $c->firstName,
-            PhoneNumber::fromString($c->phone),
-            $c->email ? Email::fromString($c->email) : null,
+        $birthDate = $command->birthDate ? \DateTimeImmutable::createFromFormat('d/m/Y', $command->birthDate) ?: null : null;
+        $member = Member::create($id, $command->lastName, $command->firstName,
+            PhoneNumber::fromString($command->phone),
+            $command->email ? Email::fromString($command->email) : null,
             $birthDate);
-        $this->repo->save($m);
+        $this->repo->save($member);
+
         return $id;
     }
 }

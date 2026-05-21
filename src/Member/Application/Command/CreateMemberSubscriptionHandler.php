@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Member\Application\Command;
 
 use App\Member\Domain\MemberSubscription;
@@ -9,13 +12,17 @@ final class CreateMemberSubscriptionHandler
 {
     public function __construct(private MemberSubscriptionRepository $repo) {}
 
-    public function __invoke(CreateMemberSubscriptionCommand $c): void
+    public function __invoke(CreateMemberSubscriptionCommand $command): void
     {
-        if ($this->repo->findByMemberAndSeason($c->memberId, $c->season) !== null) {
-            throw new \DomainException("Une souscription existe déjà pour ce membre pour la saison {$c->season}.");
+        if ($this->repo->findByMemberAndSeason($command->memberId, $command->season) !== null) {
+            throw new \DomainException("Une souscription existe déjà pour ce membre pour la saison {$command->season}.");
         }
         $this->repo->save(MemberSubscription::create(
-            Uuid::generate(), $c->memberId, $c->season, $c->membershipType, $c->status,
+            Uuid::generate(),
+            $command->memberId,
+            $command->season,
+            $command->membershipType,
+            $command->status,
         ));
     }
 }
