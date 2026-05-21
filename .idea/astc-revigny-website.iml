@@ -10,6 +10,15 @@
       <sourceFolder url="file://$MODULE_DIR$/src/Shared" isTestSource="false" packagePrefix="App\Shared\" />
       <sourceFolder url="file://$MODULE_DIR$/src/Tournament" isTestSource="false" packagePrefix="App\Tournament\" />
       <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" packagePrefix="App\Tests\" />
+      <sourceFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/src" isTestSource="false" packagePrefix="App\" />
+      <sourceFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/src/Member" isTestSource="false" packagePrefix="App\Member\" />
+      <sourceFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/src/Public" isTestSource="false" packagePrefix="App\Public\" />
+      <sourceFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/src/Registration" isTestSource="false" packagePrefix="App\Registration\" />
+      <sourceFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/src/Security" isTestSource="false" packagePrefix="App\Security\" />
+      <sourceFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/src/Shared" isTestSource="false" packagePrefix="App\Shared\" />
+      <sourceFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/src/Tournament" isTestSource="false" packagePrefix="App\Tournament\" />
+      <sourceFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/tests" isTestSource="true" packagePrefix="App\Tests\" />
       <excludeFolder url="file://$MODULE_DIR$/var/cache" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/brick/math" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
@@ -126,6 +135,131 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/twig/extra-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/twig/string-extra" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/twig/twig" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/maennchen/zipstream-php" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/markbaker/complex" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/markbaker/matrix" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phpoffice/phpspreadsheet" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/psr/simple-cache" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/brick/math" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/dama/doctrine-test-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/doctrine/collections" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/doctrine/dbal" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/doctrine/deprecations" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/doctrine/doctrine-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/doctrine/doctrine-migrations-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/doctrine/event-manager" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/doctrine/inflector" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/doctrine/instantiator" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/doctrine/lexer" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/doctrine/migrations" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/doctrine/orm" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/doctrine/persistence" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/doctrine/sql-formatter" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/egulias/email-validator" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/giggsey/libphonenumber-for-php" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/giggsey/locale" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/maennchen/zipstream-php" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/markbaker/complex" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/markbaker/matrix" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/masterminds/html5" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/myclabs/deep-copy" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/nikic/php-parser" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/phar-io/manifest" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/phar-io/version" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/phpoffice/phpspreadsheet" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/phpunit/php-code-coverage" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/phpunit/php-file-iterator" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/phpunit/php-invoker" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/phpunit/php-text-template" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/phpunit/php-timer" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/phpunit/phpunit" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/psr/cache" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/psr/clock" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/psr/container" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/psr/event-dispatcher" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/psr/log" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/psr/simple-cache" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/ramsey/collection" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/ramsey/uuid" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/sebastian/cli-parser" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/sebastian/comparator" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/sebastian/complexity" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/sebastian/diff" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/sebastian/environment" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/sebastian/exporter" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/sebastian/global-state" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/sebastian/lines-of-code" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/sebastian/object-enumerator" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/sebastian/object-reflector" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/sebastian/recursion-context" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/sebastian/type" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/sebastian/version" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/staabm/side-effects-detector" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/asset" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/browser-kit" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/cache" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/cache-contracts" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/clock" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/config" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/console" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/css-selector" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/dependency-injection" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/deprecation-contracts" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/doctrine-bridge" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/dom-crawler" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/dotenv" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/error-handler" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/event-dispatcher" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/event-dispatcher-contracts" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/filesystem" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/finder" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/flex" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/form" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/framework-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/http-foundation" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/http-kernel" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/mailer" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/maker-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/mime" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/options-resolver" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/password-hasher" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/phpunit-bridge" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/polyfill-intl-grapheme" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/polyfill-intl-icu" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/polyfill-intl-idn" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/polyfill-intl-normalizer" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/polyfill-mbstring" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/polyfill-php83" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/polyfill-php84" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/polyfill-php85" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/polyfill-uuid" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/process" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/property-access" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/property-info" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/routing" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/runtime" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/security-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/security-core" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/security-csrf" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/security-http" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/service-contracts" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/stopwatch" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/string" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/translation-contracts" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/twig-bridge" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/twig-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/type-info" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/uid" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/validator" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/var-dumper" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/var-exporter" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/webpack-encore-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/symfony/yaml" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/theseer/tokenizer" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/twig/extra-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/twig/string-extra" />
+      <excludeFolder url="file://$MODULE_DIR$/.worktrees/feature/member-subscriptions/vendor/twig/twig" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
