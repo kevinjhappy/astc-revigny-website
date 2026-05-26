@@ -1,4 +1,5 @@
 <?php
+
 namespace App\News\Application\Command;
 
 use App\News\Domain\Post;
@@ -9,10 +10,11 @@ final class CreatePostHandler
 {
     public function __construct(private PostRepository $repo) {}
 
-    public function __invoke(CreatePostCommand $c): Uuid
+    public function __invoke(CreatePostCommand $command): Uuid
     {
         $id = Uuid::generate();
-        $this->repo->save(Post::create($id, $c->title, $c->content));
+        $this->repo->save(Post::create($id, $command->title, $command->content));
+
         return $id;
     }
 }

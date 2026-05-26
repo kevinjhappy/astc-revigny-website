@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Tests\Member\Domain;
 
 use App\Member\Domain\Member;
@@ -11,24 +12,24 @@ final class MemberTest extends TestCase
 {
     public function test_creation_with_required_fields(): void
     {
-        $m = Member::create(Uuid::generate(), 'Dupont', 'Jean', PhoneNumber::fromString('0612345678'), null);
-        self::assertSame('Dupont', $m->lastName());
-        self::assertSame('Jean', $m->firstName());
-        self::assertNull($m->email());
+        $member = Member::create(Uuid::generate(), 'Dupont', 'Jean', PhoneNumber::fromString('0612345678'), null);
+        self::assertSame('Dupont', $member->lastName());
+        self::assertSame('Jean', $member->firstName());
+        self::assertNull($member->email());
     }
 
     public function test_creation_with_email(): void
     {
-        $m = Member::create(Uuid::generate(), 'D', 'J',
+        $member = Member::create(Uuid::generate(), 'D', 'J',
             PhoneNumber::fromString('0612345678'), Email::fromString('a@b.fr'));
-        self::assertSame('a@b.fr', (string)$m->email());
+        self::assertSame('a@b.fr', (string)$member->email());
     }
 
     public function test_update(): void
     {
-        $m = Member::create(Uuid::generate(), 'A', 'B', PhoneNumber::fromString('0612345678'), null);
-        $m->update('New', 'Name', PhoneNumber::fromString('0798765432'), Email::fromString('x@y.fr'), null);
-        self::assertSame('New', $m->lastName());
-        self::assertSame('+33798765432', (string)$m->phone());
+        $member = Member::create(Uuid::generate(), 'A', 'B', PhoneNumber::fromString('0612345678'), null);
+        $member->update('New', 'Name', PhoneNumber::fromString('0798765432'), Email::fromString('x@y.fr'), null);
+        self::assertSame('New', $member->lastName());
+        self::assertSame('+33798765432', (string)$member->phone());
     }
 }

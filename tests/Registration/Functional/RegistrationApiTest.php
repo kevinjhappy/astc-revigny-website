@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Tests\Registration\Functional;
 
 use App\Shared\Domain\ValueObject\Uuid;
@@ -22,14 +23,14 @@ class RegistrationApiTest extends WebTestCase
         $id = Uuid::generate();
         $this->tournamentId = (string) $id;
 
-        $t = Tournament::create(
+        $tournament = Tournament::create(
             $id, 'Test Tournament',
             new \DateTimeImmutable('+1 day'),
             new \DateTimeImmutable('+2 days'),
             TournamentType::OPEN, 10, null
         );
-        $t->publish();
-        $em->persist($t);
+        $tournament->publish();
+        $em->persist($tournament);
         $em->flush();
     }
 

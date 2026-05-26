@@ -1,10 +1,13 @@
 <?php
+
 namespace App\Registration\Domain;
+
 use App\Shared\Domain\ValueObject\Uuid;
+
 interface RegistrationRepository
 {
-    public function save(Registration $r): void;
-    public function remove(Registration $r): void;
+    public function save(Registration $registration): void;
+    public function remove(Registration $registration): void;
     public function get(Uuid $id): ?Registration;
     /** @return Registration[] */
     public function byTournament(Uuid $tournamentId): array;

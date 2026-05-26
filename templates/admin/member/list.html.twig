@@ -15,7 +15,7 @@
       <form method="post" action="{{ path('admin_member_start_season') }}" style="display:inline">
         <input type="hidden" name="_token" value="{{ csrf_token('start-season') }}">
         <input type="hidden" name="season" value="{{ nextSeason }}">
-        <button style="background:#E8721A" data-confirm="Démarrer la saison {{ nextSeason }} ?">
+        <button style="background:#E8721A" class="btn" data-confirm="Démarrer la saison {{ nextSeason }} ?">
           Démarrer la saison {{ nextSeason }}
         </button>
       </form>

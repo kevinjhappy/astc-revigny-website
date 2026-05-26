@@ -7,11 +7,12 @@ final class Email implements \Stringable
 
     public static function fromString(string $value): self
     {
-        $v = strtolower(trim($value));
-        if (!filter_var($v, FILTER_VALIDATE_EMAIL)) {
+        $normalized = strtolower(trim($value));
+        if (!filter_var($normalized, FILTER_VALIDATE_EMAIL)) {
             throw new \InvalidArgumentException("Invalid email: $value");
         }
-        return new self($v);
+
+        return new self($normalized);
     }
 
     public function __toString(): string { return $this->value; }

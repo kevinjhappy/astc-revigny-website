@@ -1,24 +1,40 @@
 <?php
+
 namespace App\Registration\Infrastructure\Doctrine;
+
 use App\Registration\Domain\Registration;
 use App\Registration\Domain\RegistrationRepository;
 use App\Registration\Domain\RegistrationStatus;
 use App\Shared\Domain\ValueObject\Uuid;
 use Doctrine\ORM\EntityManagerInterface;
+
 final class DoctrineRegistrationRepository implements RegistrationRepository
 {
     public function __construct(private EntityManagerInterface $em) {}
-    public function save(Registration $r): void { $this->em->persist($r); $this->em->flush(); }
-    public function remove(Registration $r): void { $this->em->remove($r); $this->em->flush(); }
+
+    public function save(Registration $registration): void
+    {
+        $this->em->persist($registration);
+        $this->em->flush();
+    }
+
+    public function remove(Registration $registration): void
+    {
+        $this->em->remove($registration);
+        $this->em->flush();
+    }
+
     public function get(Uuid $id): ?Registration
     {
         return $this->em->getRepository(Registration::class)->findOneBy(['id' => (string)$id]);
     }
+
     public function byTournament(Uuid $tournamentId): array
     {
         return $this->em->getRepository(Registration::class)
             ->findBy(['tournamentId' => (string)$tournamentId], ['registeredAt' => 'ASC']);
     }
+
     public function countConfirmed(Uuid $tournamentId): int
     {
         return (int)$this->em->createQueryBuilder()->select('COUNT(r.id)')
@@ -28,6 +44,7 @@ final class DoctrineRegistrationRepository implements RegistrationRepository
             ->setParameter('st', RegistrationStatus::CONFIRMED->value)
             ->getQuery()->getSingleScalarResult();
     }
+
     public function firstWaitingList(Uuid $tournamentId): ?Registration
     {
         return $this->em->getRepository(Registration::class)->findOneBy(
@@ -35,6 +52,7 @@ final class DoctrineRegistrationRepository implements RegistrationRepository
             ['registeredAt' => 'ASC']
         );
     }
+
     public function all(?string $tournamentId, ?string $status, array $allowedTournamentIds = []): array
     {
         $qb = $this->em->createQueryBuilder()->select('r')->from(Registration::class, 'r')
@@ -44,7 +62,10 @@ final class DoctrineRegistrationRepository implements RegistrationRepository
         } elseif ($allowedTournamentIds !== []) {
             $qb->andWhere('r.tournamentId IN (:tids)')->setParameter('tids', $allowedTournamentIds);
         }
-        if ($status) $qb->andWhere('r.status = :st')->setParameter('st', $status);
+        if ($status) {
+            $qb->andWhere('r.status = :st')->setParameter('st', $status);
+        }
+
         return $qb->getQuery()->getResult();
     }
 }

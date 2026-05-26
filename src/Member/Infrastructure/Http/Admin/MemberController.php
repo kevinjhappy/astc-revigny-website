@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Member\Infrastructure\Http\Admin;
 
 use App\Member\Application\Command\CreateMemberCommand;
@@ -36,21 +37,21 @@ final class MemberController extends AbstractController
 {
     #[Route("", name: "admin_member_list", methods: ["GET"])]
     public function list(
-        Request $r,
+        Request $request,
         MemberRepository $repo,
         MemberSubscriptionRepository $subRepo,
         SeasonHelper $seasonHelper,
     ): Response {
-        $q = $r->query->get('q', '');
-        $members = $repo->search($q ?: null);
+        $searchQuery = $request->query->get('q', '');
+        $members = $repo->search($searchQuery ?: null);
         $season = $seasonHelper->currentSeason();
         $subsBySeason = [];
         foreach ($subRepo->findBySeason($season) as $sub) {
             $subsBySeason[$sub->memberId()] = $sub;
         }
-        $rows = array_map(fn($m) => [
-            'member' => $m,
-            'subscription' => $subsBySeason[(string)$m->id()] ?? null,
+        $rows = array_map(fn($member) => [
+            'member' => $member,
+            'subscription' => $subsBySeason[(string)$member->id()] ?? null,
         ], $members);
 
         $nextSeason = $seasonHelper->nextSeason();
@@ -58,7 +59,7 @@ final class MemberController extends AbstractController
 
         return $this->render('admin/member/list.html.twig', [
             'rows' => $rows,
-            'q' => $q,
+            'q' => $searchQuery,
             'currentSeason' => $season,
             'nextSeason' => $nextSeason,
             'showSeasonButton' => $showSeasonButton,
@@ -67,93 +68,98 @@ final class MemberController extends AbstractController
 
     #[Route("/new", name: "admin_member_new", methods: ["GET", "POST"])]
     public function new(
-        Request $r,
-        CreateMemberHandler $h,
+        Request $request,
+        CreateMemberHandler $handler,
         CreateMemberSubscriptionHandler $subHandler,
         SeasonHelper $seasonHelper,
     ): Response {
         $form = $this->createForm(MemberType::class);
-        $form->handleRequest($r);
+        $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $d = $form->getData();
-            $memberId = $h(new CreateMemberCommand($d['lastName'], $d['firstName'], $d['phone'], $d['email'] ?? null, $d['birthDate'] ?? null));
-            if ($d['membershipType'] !== null) {
+            $formData = $form->getData();
+            $memberId = $handler(new CreateMemberCommand($formData['lastName'], $formData['firstName'], $formData['phone'], $formData['email'] ?? null, $formData['birthDate'] ?? null));
+            if ($formData['membershipType'] !== null) {
                 $subHandler(new CreateMemberSubscriptionCommand(
                     (string)$memberId,
                     $seasonHelper->currentSeason(),
-                    $d['membershipType'],
-                    $d['subscriptionStatus'] ?? SubscriptionStatus::PENDING,
+                    $formData['membershipType'],
+                    $formData['subscriptionStatus'] ?? SubscriptionStatus::PENDING,
                 ));
             }
             $this->addFlash('success', 'Membre créé');
+
             return $this->redirectToRoute('admin_member_list');
         }
+
         return $this->render('admin/member/new.html.twig', ['form' => $form]);
     }
 
     #[Route("/start-season", name: "admin_member_start_season", methods: ["POST"])]
-    public function startSeason(Request $r, StartNewSeasonHandler $h): Response
+    public function startSeason(Request $request, StartNewSeasonHandler $handler): Response
     {
-        $season = $r->request->get('season', '');
-        if ($this->isCsrfTokenValid('start-season', $r->request->get('_token'))) {
-            ($h)(new StartNewSeasonCommand($season));
+        $season = $request->request->get('season', '');
+        if ($this->isCsrfTokenValid('start-season', $request->request->get('_token'))) {
+            ($handler)(new StartNewSeasonCommand($season));
             $this->addFlash('success', "Saison $season démarrée. Les membres PAYÉS de la saison précédente sont passés en « En attente ».");
         }
+
         return $this->redirectToRoute('admin_member_list');
     }
 
     #[Route("/{id}/edit", name: "admin_member_edit", methods: ["GET", "POST"])]
     public function edit(
         string $id,
-        Request $r,
+        Request $request,
         MemberRepository $repo,
-        UpdateMemberHandler $h,
+        UpdateMemberHandler $handler,
         CreateMemberSubscriptionHandler $createSubHandler,
         UpdateMemberSubscriptionHandler $updateSubHandler,
         MemberSubscriptionRepository $subRepo,
         SeasonHelper $seasonHelper,
     ): Response {
-        $m = $repo->get(Uuid::fromString($id)) ?? throw $this->createNotFoundException();
-        $currentSub = $subRepo->findByMemberAndSeason((string)$m->id(), $seasonHelper->currentSeason());
+        $member = $repo->get(Uuid::fromString($id)) ?? throw $this->createNotFoundException();
+        $currentSub = $subRepo->findByMemberAndSeason((string)$member->id(), $seasonHelper->currentSeason());
         $form = $this->createForm(MemberType::class, [
-            'lastName' => $m->lastName(),
-            'firstName' => $m->firstName(),
-            'phone' => (string)$m->phone(),
-            'email' => $m->email() ? (string)$m->email() : null,
-            'birthDate' => $m->birthDate()?->format('d/m/Y'),
+            'lastName' => $member->lastName(),
+            'firstName' => $member->firstName(),
+            'phone' => (string)$member->phone(),
+            'email' => $member->email() ? (string)$member->email() : null,
+            'birthDate' => $member->birthDate()?->format('d/m/Y'),
             'membershipType' => $currentSub?->type(),
             'subscriptionStatus' => $currentSub?->status(),
         ]);
-        $form->handleRequest($r);
+        $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $d = $form->getData();
-            $h(new UpdateMemberCommand($id, $d['lastName'], $d['firstName'], $d['phone'], $d['email'] ?? null, $d['birthDate'] ?? null));
-            if ($d['membershipType'] !== null) {
+            $formData = $form->getData();
+            $handler(new UpdateMemberCommand($id, $formData['lastName'], $formData['firstName'], $formData['phone'], $formData['email'] ?? null, $formData['birthDate'] ?? null));
+            if ($formData['membershipType'] !== null) {
                 if ($currentSub !== null) {
                     $updateSubHandler(new UpdateMemberSubscriptionCommand(
                         (string)$currentSub->id(),
-                        $d['membershipType'],
-                        $d['subscriptionStatus'] ?? SubscriptionStatus::PENDING,
+                        $formData['membershipType'],
+                        $formData['subscriptionStatus'] ?? SubscriptionStatus::PENDING,
                     ));
                 } else {
                     $createSubHandler(new CreateMemberSubscriptionCommand(
-                        (string)$m->id(),
+                        (string)$member->id(),
                         $seasonHelper->currentSeason(),
-                        $d['membershipType'],
-                        $d['subscriptionStatus'] ?? SubscriptionStatus::PENDING,
+                        $formData['membershipType'],
+                        $formData['subscriptionStatus'] ?? SubscriptionStatus::PENDING,
                     ));
                 }
             }
             $this->addFlash('success', 'Membre mis à jour');
+
             return $this->redirectToRoute('admin_member_list');
         }
-        return $this->render('admin/member/edit.html.twig', ['form' => $form, 'member' => $m]);
+
+        return $this->render('admin/member/edit.html.twig', ['form' => $form, 'member' => $member]);
     }
 
     #[Route("/import", name: "admin_member_import", methods: ["GET", "POST"])]
     public function import(
-        Request $r,
-        CreateMemberHandler $h,
+        Request $request,
+        CreateMemberHandler $handler,
         UpdateMemberHandler $updateHandler,
         CreateMemberSubscriptionHandler $createSubHandler,
         UpdateMemberSubscriptionHandler $updateSubHandler,
@@ -161,18 +167,19 @@ final class MemberController extends AbstractController
         MemberSubscriptionRepository $subRepo,
         SeasonHelper $seasonHelper,
     ): Response {
-        if ($r->getMethod() === 'GET') {
+        if ($request->getMethod() === 'GET') {
             return $this->render('admin/member/import.html.twig');
         }
 
-        if (!$this->isCsrfTokenValid('member-import', $r->request->get('_token'))) {
+        if (!$this->isCsrfTokenValid('member-import', $request->request->get('_token'))) {
             $this->addFlash('error', 'Token CSRF invalide.');
             return $this->redirectToRoute('admin_member_import');
         }
 
-        $file = $r->files->get('csv');
+        $file = $request->files->get('csv');
         if (!$file) {
             $this->addFlash('error', 'Aucun fichier sélectionné.');
+
             return $this->redirectToRoute('admin_member_import');
         }
 
@@ -235,7 +242,7 @@ final class MemberController extends AbstractController
                         ));
                         $memberId = (string)$member->id();
                     } else {
-                        $newId = $h(new CreateMemberCommand($lastName, $firstName, $phone, $email ?: null, $birthDate ?: null));
+                        $newId = $handler(new CreateMemberCommand($lastName, $firstName, $phone, $email ?: null, $birthDate ?: null));
                         $memberId = (string)$newId;
                     }
                     $imported++;
@@ -302,7 +309,7 @@ final class MemberController extends AbstractController
                 }
 
                 try {
-                    $h(new CreateMemberCommand($lastName, $firstName, $phone, $email ?: null, $birthDate ?: null));
+                    $handler(new CreateMemberCommand($lastName, $firstName, $phone, $email ?: null, $birthDate ?: null));
                     $imported++;
                 } catch (\Throwable $e) {
                     $this->addFlash('error', "Ligne $line ($firstName $lastName) : " . $e->getMessage());
@@ -338,21 +345,21 @@ final class MemberController extends AbstractController
         $sheet->fromArray([$headers], null, 'A1');
         $sheet->getStyle('A1:I1')->getFont()->setBold(true);
 
-        $row = 2;
-        foreach ($members as $m) {
-            $sub = $subsBySeason[(string)$m->id()] ?? null;
+        $rowIndex = 2;
+        foreach ($members as $member) {
+            $sub = $subsBySeason[(string)$member->id()] ?? null;
             $sheet->fromArray([[
-                (string)$m->id(),
-                $m->lastName(),
-                $m->firstName(),
-                (string)$m->phone(),
-                $m->email() ? (string)$m->email() : '',
-                $m->birthDate()?->format('d/m/Y') ?? '',
+                (string)$member->id(),
+                $member->lastName(),
+                $member->firstName(),
+                (string)$member->phone(),
+                $member->email() ? (string)$member->email() : '',
+                $member->birthDate()?->format('d/m/Y') ?? '',
                 $sub ? $sub->type()->label() : '—',
                 $sub ? $sub->status()->label() : '—',
                 $sub ? $sub->season() : '—',
-            ]], null, 'A'.$row);
-            $row++;
+            ]], null, 'A'.$rowIndex);
+            $rowIndex++;
         }
 
         $response = new StreamedResponse(function () use ($spreadsheet): void {
@@ -371,20 +378,22 @@ final class MemberController extends AbstractController
         MemberRepository $repo,
         MemberSubscriptionRepository $subRepo,
     ): Response {
-        $m = $repo->get(Uuid::fromString($id)) ?? throw $this->createNotFoundException();
+        $member = $repo->get(Uuid::fromString($id)) ?? throw $this->createNotFoundException();
+
         return $this->render('admin/member/show.html.twig', [
-            'member' => $m,
-            'subscriptions' => $subRepo->findByMember((string)$m->id()),
+            'member' => $member,
+            'subscriptions' => $subRepo->findByMember((string)$member->id()),
         ]);
     }
 
     #[Route("/{id}", name: "admin_member_delete", methods: ["POST"])]
-    public function delete(string $id, Request $r, DeleteMemberHandler $h): Response
+    public function delete(string $id, Request $request, DeleteMemberHandler $handler): Response
     {
-        if ($this->isCsrfTokenValid('del'.$id, $r->request->get('_token'))) {
-            $h(new DeleteMemberCommand($id));
+        if ($this->isCsrfTokenValid('del'.$id, $request->request->get('_token'))) {
+            $handler(new DeleteMemberCommand($id));
             $this->addFlash('success', 'Membre supprimé');
         }
+
         return $this->redirectToRoute('admin_member_list');
     }
 }

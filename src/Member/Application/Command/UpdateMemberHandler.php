@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Member\Application\Command;
 
 use App\Member\Domain\MemberRepository;
@@ -10,15 +11,15 @@ final class UpdateMemberHandler
 {
     public function __construct(private MemberRepository $repo) {}
 
-    public function __invoke(UpdateMemberCommand $c): void
+    public function __invoke(UpdateMemberCommand $command): void
     {
-        $m = $this->repo->get(Uuid::fromString($c->id))
+        $member = $this->repo->get(Uuid::fromString($command->id))
             ?? throw new \DomainException('Member not found');
-        $birthDate = $c->birthDate ? \DateTimeImmutable::createFromFormat('d/m/Y', $c->birthDate) ?: null : null;
-        $m->update($c->lastName, $c->firstName,
-            PhoneNumber::fromString($c->phone),
-            $c->email ? Email::fromString($c->email) : null,
+        $birthDate = $command->birthDate ? \DateTimeImmutable::createFromFormat('d/m/Y', $command->birthDate) ?: null : null;
+        $member->update($command->lastName, $command->firstName,
+            PhoneNumber::fromString($command->phone),
+            $command->email ? Email::fromString($command->email) : null,
             $birthDate);
-        $this->repo->save($m);
+        $this->repo->save($member);
     }
 }

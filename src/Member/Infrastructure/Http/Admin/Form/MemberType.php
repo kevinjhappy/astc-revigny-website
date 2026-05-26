@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Member\Infrastructure\Http\Admin\Form;
 
 use App\Member\Domain\MembershipType;
@@ -13,9 +14,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 final class MemberType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $b, array $opts): void
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $b->add('lastName', TextType::class, ['label' => 'Nom', 'constraints' => [new Assert\NotBlank(), new Assert\Length(max: 100)]])
+        $builder->add('lastName', TextType::class, ['label' => 'Nom', 'constraints' => [new Assert\NotBlank(), new Assert\Length(max: 100)]])
           ->add('firstName', TextType::class, ['label' => 'Prénom', 'constraints' => [new Assert\NotBlank(), new Assert\Length(max: 100)]])
           ->add('phone', TextType::class, ['label' => 'Téléphone', 'constraints' => [new Assert\NotBlank()]])
           ->add('email', EmailType::class, ['label' => 'Email', 'required' => false])
@@ -29,7 +30,7 @@ final class MemberType extends AbstractType
               'label' => 'Type de cotisation',
               'required' => false,
               'choices' => array_combine(
-                  array_map(fn($t) => $t->label(), MembershipType::cases()),
+                  array_map(fn($type) => $type->label(), MembershipType::cases()),
                   MembershipType::cases(),
               ),
               'placeholder' => '— Aucune cotisation —',
@@ -38,7 +39,7 @@ final class MemberType extends AbstractType
               'label' => 'Statut paiement',
               'required' => false,
               'choices' => array_combine(
-                  array_map(fn($s) => $s->label(), SubscriptionStatus::cases()),
+                  array_map(fn($status) => $status->label(), SubscriptionStatus::cases()),
                   SubscriptionStatus::cases(),
               ),
               'placeholder' => '— Sélectionner —',

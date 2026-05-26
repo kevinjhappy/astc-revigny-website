@@ -14,7 +14,7 @@ final class Version20260511105707 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return '';
+        return 'Create member_subscriptions table with unique constraint on (member_id, season)';
     }
 
     public function up(Schema $schema): void

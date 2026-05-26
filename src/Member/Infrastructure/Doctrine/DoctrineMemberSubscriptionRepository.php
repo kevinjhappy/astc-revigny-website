@@ -14,15 +14,15 @@ final class DoctrineMemberSubscriptionRepository implements MemberSubscriptionRe
 {
     public function __construct(private EntityManagerInterface $em) {}
 
-    public function save(MemberSubscription $s): void
+    public function save(MemberSubscription $subscription): void
     {
-        $this->em->persist($s);
+        $this->em->persist($subscription);
         $this->em->flush();
     }
 
-    public function remove(MemberSubscription $s): void
+    public function remove(MemberSubscription $subscription): void
     {
-        $this->em->remove($s);
+        $this->em->remove($subscription);
         $this->em->flush();
     }
 

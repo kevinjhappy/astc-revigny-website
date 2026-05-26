@@ -18,13 +18,13 @@ class MatchMemberHandler
         private SeasonHelper $seasonHelper,
     ) {}
 
-    public function __invoke(MatchMemberQuery $q): bool
+    public function __invoke(MatchMemberQuery $query): bool
     {
-        $member = $this->repo->findByLastNameAndPhone($q->lastName, PhoneNumber::fromString($q->phone));
+        $member = $this->repo->findByLastNameAndPhone($query->lastName, PhoneNumber::fromString($query->phone));
         if ($member === null) {
             throw new \DomainException('Ce tournoi est réservé aux membres du club.');
         }
-        if (!$q->requireTournamentAccess) {
+        if (!$query->requireTournamentAccess) {
             return true;
         }
         $sub = $this->subscriptionRepo->findByMemberAndSeason(
@@ -34,6 +34,7 @@ class MatchMemberHandler
         if ($sub === null || !$sub->type()->hasTournamentAccess() || $sub->status() !== SubscriptionStatus::PAID) {
             throw new \DomainException('Ce tournoi est réservé aux membres avec accès aux tournois (cotisation Terrains + Tournois ou Terrains + Tournois + Cours).');
         }
+
         return true;
     }
 }

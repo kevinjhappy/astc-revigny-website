@@ -1,17 +1,28 @@
 <?php
+
 namespace App\Registration\Application\Command;
+
 use App\Registration\Domain\RegistrationRepository;
 use App\Registration\Domain\RegistrationStatus;
 use App\Shared\Domain\ValueObject\Uuid;
-final class CancelRegistrationHandler {
+
+final class CancelRegistrationHandler
+{
     public function __construct(private RegistrationRepository $repo) {}
-    public function __invoke(CancelRegistrationCommand $c): void {
-        $r = $this->repo->get(Uuid::fromString($c->id)) ?? throw new \DomainException('not found');
-        $wasConfirmed = $r->status() === RegistrationStatus::CONFIRMED;
-        $r->cancel(); $this->repo->save($r);
+
+    public function __invoke(CancelRegistrationCommand $command): void
+    {
+        $registration = $this->repo->get(Uuid::fromString($command->id))
+            ?? throw new \DomainException('not found');
+        $wasConfirmed = $registration->status() === RegistrationStatus::CONFIRMED;
+        $registration->cancel();
+        $this->repo->save($registration);
         if ($wasConfirmed) {
-            $next = $this->repo->firstWaitingList($r->tournamentId());
-            if ($next) { $next->promoteToPending(); $this->repo->save($next); }
+            $next = $this->repo->firstWaitingList($registration->tournamentId());
+            if ($next) {
+                $next->promoteToPending();
+                $this->repo->save($next);
+            }
         }
     }
 }

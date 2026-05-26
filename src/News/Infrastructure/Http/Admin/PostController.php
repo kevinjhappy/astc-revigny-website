@@ -1,4 +1,5 @@
 <?php
+
 namespace App\News\Infrastructure\Http\Admin;
 
 use App\News\Application\Command\CreatePostCommand;
@@ -35,64 +36,71 @@ final class PostController extends AbstractController
     }
 
     #[Route('/new', name: 'admin_post_new', methods: ['GET', 'POST'])]
-    public function new(Request $r, CreatePostHandler $h): Response
+    public function new(Request $request, CreatePostHandler $handler): Response
     {
         $form = $this->createForm(PostType::class);
-        $form->handleRequest($r);
+        $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $d = $form->getData();
-            $h(new CreatePostCommand($d['title'], $d['content']));
+            $formData = $form->getData();
+            $handler(new CreatePostCommand($formData['title'], $formData['content']));
             $this->addFlash('success', 'Actualité créée');
+
             return $this->redirectToRoute('admin_post_list');
         }
+
         return $this->render('admin/post/new.html.twig', ['form' => $form]);
     }
 
     #[Route('/{id}/edit', name: 'admin_post_edit', methods: ['GET', 'POST'])]
-    public function edit(string $id, Request $r, PostRepository $repo, UpdatePostHandler $h): Response
+    public function edit(string $id, Request $request, PostRepository $repo, UpdatePostHandler $handler): Response
     {
         $post = $repo->get(Uuid::fromString($id)) ?? throw $this->createNotFoundException();
         $form = $this->createForm(PostType::class, [
             'title' => $post->title(),
             'content' => $post->content(),
         ]);
-        $form->handleRequest($r);
+        $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $d = $form->getData();
-            $h(new UpdatePostCommand($id, $d['title'], $d['content']));
+            $formData = $form->getData();
+            $handler(new UpdatePostCommand($id, $formData['title'], $formData['content']));
             $this->addFlash('success', 'Actualité mise à jour');
+
             return $this->redirectToRoute('admin_post_list');
         }
+
         return $this->render('admin/post/edit.html.twig', ['form' => $form, 'post' => $post]);
     }
 
     #[Route('/{id}/publish', name: 'admin_post_publish', methods: ['POST'])]
-    public function publish(string $id, Request $r, PublishPostHandler $h): Response
+    public function publish(string $id, Request $request, PublishPostHandler $handler): Response
     {
-        if ($this->isCsrfTokenValid('pub' . $id, $r->request->get('_token'))) {
-            $h(new PublishPostCommand($id));
+        if ($this->isCsrfTokenValid('pub' . $id, $request->request->get('_token'))) {
+            $handler(new PublishPostCommand($id));
             $this->addFlash('success', 'Actualité publiée');
         }
+
         return $this->redirectToRoute('admin_post_list');
     }
 
     #[Route('/{id}/unpublish', name: 'admin_post_unpublish', methods: ['POST'])]
-    public function unpublish(string $id, Request $r, UnpublishPostHandler $h): Response
+    public function unpublish(string $id, Request $request, UnpublishPostHandler $handler): Response
     {
-        if ($this->isCsrfTokenValid('unp' . $id, $r->request->get('_token'))) {
-            $h(new UnpublishPostCommand($id));
+        if ($this->isCsrfTokenValid('unp' . $id, $request->request->get('_token'))) {
+            $handler(new UnpublishPostCommand($id));
             $this->addFlash('success', 'Actualité repassée en brouillon');
         }
+
         return $this->redirectToRoute('admin_post_list');
     }
 
     #[Route('/{id}/delete', name: 'admin_post_delete', methods: ['POST'])]
-    public function delete(string $id, Request $r, DeletePostHandler $h): Response
+    public function delete(string $id, Request $request, DeletePostHandler $handler): Response
     {
-        if ($this->isCsrfTokenValid('del' . $id, $r->request->get('_token'))) {
-            $h(new DeletePostCommand($id));
+        if ($this->isCsrfTokenValid('del' . $id, $request->request->get('_token'))) {
+            $handler(new DeletePostCommand($id));
             $this->addFlash('success', 'Actualité supprimée');
         }
+
         return $this->redirectToRoute('admin_post_list');
     }
 }

@@ -22,91 +22,99 @@ final class RegisterHandlerTest extends TestCase
 {
     private function openTournament(int $max = 2): Tournament
     {
-        $t = Tournament::create(Uuid::generate(), 'T',
+        $tournament = Tournament::create(Uuid::generate(), 'T',
             new \DateTimeImmutable('+1 day'), new \DateTimeImmutable('+2 days'),
             TournamentType::OPEN, $max, null);
-        $t->publish();
-        return $t;
+        $tournament->publish();
+
+        return $tournament;
     }
 
-    private function fakes(Tournament $t, array $regs = []): array
+    private function fakes(Tournament $tournament, array $registrations = []): array
     {
-        $tRepo = new class($t) implements TournamentRepository {
-            public function __construct(private Tournament $t) {}
-            public function save(Tournament $x): void {}
-            public function get(Uuid $id): ?Tournament { return $this->t; }
-            public function all(): array { return [$this->t]; }
-            public function published(): array { return [$this->t]; }
-            public function publishedOrClosed(): array { return [$this->t]; }
-            public function notClosed(): array { return [$this->t]; }
+        $tournamentRepo = new class($tournament) implements TournamentRepository {
+            public function __construct(private Tournament $tournament) {}
+            public function save(Tournament $tournament): void {}
+            public function get(Uuid $id): ?Tournament { return $this->tournament; }
+            public function all(): array { return [$this->tournament]; }
+            public function published(): array { return [$this->tournament]; }
+            public function publishedOrClosed(): array { return [$this->tournament]; }
+            public function notClosed(): array { return [$this->tournament]; }
         };
-        $rRepo = new class($regs) implements RegistrationRepository {
+        $registrationRepo = new class($registrations) implements RegistrationRepository {
             public array $store;
             public function __construct(array $init) { $this->store = $init; }
-            public function save(Registration $r): void { $this->store[(string)$r->id()] = $r; }
-            public function remove(Registration $r): void { unset($this->store[(string)$r->id()]); }
+            public function save(Registration $registration): void { $this->store[(string)$registration->id()] = $registration; }
+            public function remove(Registration $registration): void { unset($this->store[(string)$registration->id()]); }
             public function get(Uuid $id): ?Registration { return $this->store[(string)$id] ?? null; }
             public function byTournament(Uuid $id): array { return array_values($this->store); }
             public function countConfirmed(Uuid $id): int {
-                return count(array_filter($this->store, fn($r)=>$r->status()===RegistrationStatus::CONFIRMED));
+                return count(array_filter($this->store, fn($registration) => $registration->status() === RegistrationStatus::CONFIRMED));
             }
             public function firstWaitingList(Uuid $id): ?Registration {
-                foreach ($this->store as $r) if ($r->status() === RegistrationStatus::WAITING_LIST) return $r;
+                foreach ($this->store as $registration) {
+                    if ($registration->status() === RegistrationStatus::WAITING_LIST) {
+                        return $registration;
+                    }
+                }
+
                 return null;
             }
-            public function all(?string $t, ?string $s, array $allowedTournamentIds = []): array { return array_values($this->store); }
+            public function all(?string $tournamentId, ?string $status, array $allowedTournamentIds = []): array { return array_values($this->store); }
         };
-        $match = new class extends MatchMemberHandler {
+        $matchHandler = new class extends MatchMemberHandler {
             public function __construct() {}
             public bool $ok = true;
-            public function __invoke(MatchMemberQuery $q): bool {
+            public function __invoke(MatchMemberQuery $query): bool {
                 if (!$this->ok) {
                     throw new \DomainException('Ce tournoi est réservé aux membres du club.');
                 }
+
                 return true;
             }
         };
-        return [$tRepo, $rRepo, $match];
+
+        return [$tournamentRepo, $registrationRepo, $matchHandler];
     }
 
     public function test_creates_pending_if_space(): void
     {
-        $t = $this->openTournament(2);
-        [$tr, $rr, $m] = $this->fakes($t);
-        $result = (new RegisterHandler($tr, $rr, $m))(new RegisterCommand((string)$t->id(), 'A','B','0612345678',null));
+        $tournament = $this->openTournament(2);
+        [$tournamentRepo, $registrationRepo, $matchHandler] = $this->fakes($tournament);
+        $result = (new RegisterHandler($tournamentRepo, $registrationRepo, $matchHandler))(new RegisterCommand((string)$tournament->id(), 'A', 'B', '0612345678', null));
         self::assertSame('PENDING', $result->status);
-        self::assertCount(1, $rr->store);
+        self::assertCount(1, $registrationRepo->store);
     }
 
     public function test_goes_to_waiting_list_when_full(): void
     {
-        $t = $this->openTournament(1);
-        $confirmed = Registration::create(Uuid::generate(), $t->id(), 'X','Y',
+        $tournament = $this->openTournament(1);
+        $confirmed = Registration::create(Uuid::generate(), $tournament->id(), 'X', 'Y',
             PhoneNumber::fromString('0611111111'), null, RegistrationStatus::CONFIRMED);
-        [$tr, $rr, $m] = $this->fakes($t, [(string)$confirmed->id() => $confirmed]);
-        $result = (new RegisterHandler($tr, $rr, $m))(new RegisterCommand((string)$t->id(), 'A','B','0612345678',null));
+        [$tournamentRepo, $registrationRepo, $matchHandler] = $this->fakes($tournament, [(string)$confirmed->id() => $confirmed]);
+        $result = (new RegisterHandler($tournamentRepo, $registrationRepo, $matchHandler))(new RegisterCommand((string)$tournament->id(), 'A', 'B', '0612345678', null));
         self::assertSame('WAITING_LIST', $result->status);
     }
 
     public function test_rejects_members_only_when_not_member(): void
     {
-        $t = Tournament::create(Uuid::generate(), 'T',
+        $tournament = Tournament::create(Uuid::generate(), 'T',
             new \DateTimeImmutable('+1 day'), new \DateTimeImmutable('+2 days'),
             TournamentType::MEMBERS_ONLY, 10, null);
-        $t->publish();
-        [$tr, $rr, $m] = $this->fakes($t);
-        $m->ok = false;
+        $tournament->publish();
+        [$tournamentRepo, $registrationRepo, $matchHandler] = $this->fakes($tournament);
+        $matchHandler->ok = false;
         $this->expectException(\DomainException::class);
-        (new RegisterHandler($tr, $rr, $m))(new RegisterCommand((string)$t->id(), 'A','B','0612345678',null));
+        (new RegisterHandler($tournamentRepo, $registrationRepo, $matchHandler))(new RegisterCommand((string)$tournament->id(), 'A', 'B', '0612345678', null));
     }
 
     public function test_rejects_if_tournament_not_published(): void
     {
-        $t = Tournament::create(Uuid::generate(), 'T',
+        $tournament = Tournament::create(Uuid::generate(), 'T',
             new \DateTimeImmutable('+1 day'), new \DateTimeImmutable('+2 days'),
             TournamentType::OPEN, 10, null);
-        [$tr, $rr, $m] = $this->fakes($t);
+        [$tournamentRepo, $registrationRepo, $matchHandler] = $this->fakes($tournament);
         $this->expectException(\DomainException::class);
-        (new RegisterHandler($tr, $rr, $m))(new RegisterCommand((string)$t->id(), 'A','B','0612345678',null));
+        (new RegisterHandler($tournamentRepo, $registrationRepo, $matchHandler))(new RegisterCommand((string)$tournament->id(), 'A', 'B', '0612345678', null));
     }
 }
