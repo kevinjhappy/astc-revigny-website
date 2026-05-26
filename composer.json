@@ -12,6 +12,7 @@
         "doctrine/orm": "^3.6",
         "giggsey/libphonenumber-for-php": "^9.0",
         "ramsey/uuid": "^4.9",
+        "symfony/apache-pack": "^1.0.1",
         "symfony/asset": "7.4.*",
         "symfony/console": "7.4.*",
         "symfony/dotenv": "7.4.*",
