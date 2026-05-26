@@ -2,12 +2,22 @@
 {% block title %}Importer des membres{% endblock %}
 {% block body %}
   <h1>Importer des membres (CSV)</h1>
+  <p style="color:#555;margin-bottom:1rem">
+    Le fichier doit être au format <strong>CSV avec séparateur point-virgule</strong>. Deux formats sont acceptés :
+  </p>
+  <p style="color:#555;margin-bottom:0.5rem">
+    <strong>Format export (recommandé)</strong> — correspond à l'export Excel de l'application :<br>
+    <code>id;Nom;Prénom;Téléphone;Email;Date de naissance;Type de cotisation;Statut paiement</code><br>
+    Les colonnes à partir de <em>Email</em> sont optionnelles. Si <code>id</code> est renseigné le membre est retrouvé par UUID, sinon par <em>Nom + Téléphone</em>.
+    Les membres existants sont mis à jour ; les nouveaux sont créés. L'abonnement de la saison en cours est créé ou mis à jour si <em>Type de cotisation</em> est renseigné.
+  </p>
   <p style="color:#555;margin-bottom:1.5rem">
-    Le fichier doit être au format <strong>CSV avec séparateur point-virgule</strong> et contenir en première ligne l'en-tête :<br>
+    <strong>Format simple (rétrocompatibilité)</strong> — création uniquement, sans gestion d'abonnement :<br>
     <code>Prénom;Nom;Téléphone;Email;date de naissance</code><br>
     Les colonnes <em>Email</em> et <em>date de naissance</em> sont optionnelles. La date de naissance doit être au format <strong>JJ/MM/AAAA</strong>.
   </p>
   <form method="post" enctype="multipart/form-data" style="max-width:480px">
+    <input type="hidden" name="_token" value="{{ csrf_token('member-import') }}">
     <label for="csv">Fichier CSV</label>
     <input type="file" id="csv" name="csv" accept=".csv,text/csv" required style="margin-bottom:1rem">
     <button type="submit">Importer</button>
