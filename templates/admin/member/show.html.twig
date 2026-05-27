@@ -8,6 +8,7 @@
     <tr><th>Téléphone</th><td>{{ member.phone }}</td></tr>
     <tr><th>Email</th><td>{{ member.email ?? '—' }}</td></tr>
     <tr><th>Date de naissance</th><td>{{ member.birthDate ? member.birthDate|date("d/m/Y") : '—' }}</td></tr>
+    <tr><th>Adresse postale</th><td>{{ member.postalAddress ?? '—' }}</td></tr>
   </table>
 
   <h2 style="margin-top:2rem">Historique des cotisations</h2>

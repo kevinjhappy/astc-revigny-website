@@ -19,7 +19,8 @@ final class UpdateMemberHandler
         $member->update($command->lastName, $command->firstName,
             PhoneNumber::fromString($command->phone),
             $command->email ? Email::fromString($command->email) : null,
-            $birthDate);
+            $birthDate,
+            $command->postalAddress ?: null);
         $this->repo->save($member);
     }
 }

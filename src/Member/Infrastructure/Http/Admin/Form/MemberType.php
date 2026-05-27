@@ -7,6 +7,7 @@ use App\Member\Domain\SubscriptionStatus;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -25,6 +26,11 @@ final class MemberType extends AbstractType
               'required' => false,
               'attr' => ['placeholder' => 'JJ/MM/AAAA'],
               'constraints' => [new Assert\Regex(['pattern' => '/^\d{2}\/\d{2}\/\d{4}$/', 'message' => 'Format attendu : JJ/MM/AAAA'])],
+          ])
+          ->add('postalAddress', TextareaType::class, [
+              'label' => 'Adresse postale',
+              'required' => false,
+              'attr' => ['rows' => 3],
           ])
           ->add('membershipType', ChoiceType::class, [
               'label' => 'Type de cotisation',

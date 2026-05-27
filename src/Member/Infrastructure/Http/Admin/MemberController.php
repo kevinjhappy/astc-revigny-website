@@ -77,7 +77,7 @@ final class MemberController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $formData = $form->getData();
-            $memberId = $handler(new CreateMemberCommand($formData['lastName'], $formData['firstName'], $formData['phone'], $formData['email'] ?? null, $formData['birthDate'] ?? null));
+            $memberId = $handler(new CreateMemberCommand($formData['lastName'], $formData['firstName'], $formData['phone'], $formData['email'] ?? null, $formData['birthDate'] ?? null, $formData['postalAddress'] ?? null));
             if ($formData['membershipType'] !== null) {
                 $subHandler(new CreateMemberSubscriptionCommand(
                     (string)$memberId,
@@ -125,13 +125,14 @@ final class MemberController extends AbstractController
             'phone' => (string)$member->phone(),
             'email' => $member->email() ? (string)$member->email() : null,
             'birthDate' => $member->birthDate()?->format('d/m/Y'),
+            'postalAddress' => $member->postalAddress(),
             'membershipType' => $currentSub?->type(),
             'subscriptionStatus' => $currentSub?->status(),
         ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $formData = $form->getData();
-            $handler(new UpdateMemberCommand($id, $formData['lastName'], $formData['firstName'], $formData['phone'], $formData['email'] ?? null, $formData['birthDate'] ?? null));
+            $handler(new UpdateMemberCommand($id, $formData['lastName'], $formData['firstName'], $formData['phone'], $formData['email'] ?? null, $formData['birthDate'] ?? null, $formData['postalAddress'] ?? null));
             if ($formData['membershipType'] !== null) {
                 if ($currentSub !== null) {
                     $updateSubHandler(new UpdateMemberSubscriptionCommand(

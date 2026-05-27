@@ -9,5 +9,6 @@ final class CreateMemberCommand
         public readonly string $phone,
         public readonly ?string $email,
         public readonly ?string $birthDate = null,
+        public readonly ?string $postalAddress = null,
     ) {}
 }

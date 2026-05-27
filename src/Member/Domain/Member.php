@@ -29,7 +29,10 @@ class Member
     #[ORM\Column(type: 'date_immutable', nullable: true)]
     private ?\DateTimeImmutable $birthDate;
 
-    private function __construct(Uuid $id, string $lastName, string $firstName, PhoneNumber $phone, ?Email $email, ?\DateTimeImmutable $birthDate)
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $postalAddress;
+
+    private function __construct(Uuid $id, string $lastName, string $firstName, PhoneNumber $phone, ?Email $email, ?\DateTimeImmutable $birthDate, ?string $postalAddress = null)
     {
         $this->id = $id;
         $this->lastName = $lastName;
@@ -37,20 +40,22 @@ class Member
         $this->phone = $phone;
         $this->email = $email;
         $this->birthDate = $birthDate;
+        $this->postalAddress = $postalAddress;
     }
 
-    public static function create(Uuid $id, string $lastName, string $firstName, PhoneNumber $phone, ?Email $email, ?\DateTimeImmutable $birthDate = null): self
+    public static function create(Uuid $id, string $lastName, string $firstName, PhoneNumber $phone, ?Email $email, ?\DateTimeImmutable $birthDate = null, ?string $postalAddress = null): self
     {
-        return new self($id, $lastName, $firstName, $phone, $email, $birthDate);
+        return new self($id, $lastName, $firstName, $phone, $email, $birthDate, $postalAddress);
     }
 
-    public function update(string $lastName, string $firstName, PhoneNumber $phone, ?Email $email, ?\DateTimeImmutable $birthDate): void
+    public function update(string $lastName, string $firstName, PhoneNumber $phone, ?Email $email, ?\DateTimeImmutable $birthDate, ?string $postalAddress = null): void
     {
         $this->lastName = $lastName;
         $this->firstName = $firstName;
         $this->phone = $phone;
         $this->email = $email;
         $this->birthDate = $birthDate;
+        $this->postalAddress = $postalAddress;
     }
 
     public function id(): Uuid { return $this->id; }
@@ -59,4 +64,5 @@ class Member
     public function phone(): PhoneNumber { return $this->phone; }
     public function email(): ?Email { return $this->email; }
     public function birthDate(): ?\DateTimeImmutable { return $this->birthDate; }
+    public function postalAddress(): ?string { return $this->postalAddress; }
 }
