@@ -17,6 +17,7 @@ use App\Shared\Domain\ValueObject\Uuid;
 use App\Tournament\Domain\TournamentRepository;
 use App\Tournament\Domain\TournamentStatus;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\HeaderUtils;
@@ -50,7 +51,7 @@ final class RegistrationController extends AbstractController
             }
             $registrations = array_values(array_filter(
                 $repo->byTournament($tournament->id()),
-                fn(Registration $r) => in_array($r->status(), self::EXPORT_STATUSES, true)
+                fn(Registration $registration) => in_array($registration->status(), self::EXPORT_STATUSES, true)
             ));
             $sheet = $spreadsheet->createSheet();
             $sheet->setTitle(mb_substr($tournament->name(), 0, 31));
@@ -66,7 +67,7 @@ final class RegistrationController extends AbstractController
             foreach ($tournaments as $tournament) {
                 $registrations = array_values(array_filter(
                     $repo->byTournament($tournament->id()),
-                    fn(Registration $r) => in_array($r->status(), self::EXPORT_STATUSES, true)
+                    fn(Registration $registration) => in_array($registration->status(), self::EXPORT_STATUSES, true)
                 ));
                 $sheet = $spreadsheet->createSheet();
                 $sheet->setTitle(mb_substr($tournament->name(), 0, 31));
@@ -88,21 +89,21 @@ final class RegistrationController extends AbstractController
     }
 
     /** @param Registration[] $registrations */
-    private function fillSheet(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet $sheet, array $registrations): void
+    private function fillSheet(Worksheet $sheet, array $registrations): void
     {
         $headers = ['Nom', 'Prénom', 'Téléphone', 'Email', 'Statut', 'Date d\'inscription'];
         $sheet->fromArray([$headers], null, 'A1');
         $sheet->getStyle('A1:F1')->getFont()->setBold(true);
 
         $rowIndex = 2;
-        foreach ($registrations as $r) {
+        foreach ($registrations as $registration) {
             $sheet->fromArray([[
-                $r->lastName(),
-                $r->firstName(),
-                (string) $r->phone(),
-                $r->email() ? (string) $r->email() : '',
-                $r->status()->value,
-                $r->registeredAt()->format('d/m/Y H:i'),
+                $registration->lastName(),
+                $registration->firstName(),
+                (string) $registration->phone(),
+                $registration->email() ? (string) $registration->email() : '',
+                $registration->status()->value,
+                $registration->registeredAt()->format('d/m/Y H:i'),
             ]], null, 'A' . $rowIndex);
             $rowIndex++;
         }
