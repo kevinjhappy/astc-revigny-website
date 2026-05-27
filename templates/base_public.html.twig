@@ -3,7 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}ASTC Revigny — Tennis Club{% endblock %}</title>
+  <title>{% block title %}ASTC Revigny — Club de Tennis à Revigny-sur-Ornain (55){% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}Club de tennis à Revigny-sur-Ornain (55). Rejoignez l'ASTC Revigny : tournois, cours, inscriptions en ligne. Tennis pour tous, enfants et adultes.{% endblock %}">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="{% block canonical %}https://astc-revigny.fr/{% endblock %}">
+
+  {# Open Graph #}
+  <meta property="og:title" content="{% block og_title %}ASTC Revigny — Club de Tennis{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}Club de tennis à Revigny-sur-Ornain. Tournois, inscriptions en ligne.{% endblock %}">
+  <meta property="og:url" content="{% block og_url %}https://astc-revigny.fr/{% endblock %}">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:image" content="{% block og_image %}https://astc-revigny.fr/images/og-image.jpg{% endblock %}">
+
+  {# JSON-LD SportsClub #}
+  {% block structured_data %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SportsClub",
+    "name": "ASTC Revigny — Club de Tennis",
+    "description": "Club de tennis à Revigny-sur-Ornain, ouvert à tous niveaux. Tournois, cours, inscriptions en ligne.",
+    "url": "https://astc-revigny.fr",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Revigny-sur-Ornain",
+      "postalCode": "55800",
+      "addressCountry": "FR"
+    },
+    "sport": "Tennis"
+  }
+  </script>
+  {% endblock %}
+
   <link rel="icon" type="image/png" href="{{ asset('images/Logo.png') }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
