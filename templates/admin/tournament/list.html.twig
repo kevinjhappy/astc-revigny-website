@@ -17,7 +17,13 @@
         <td>{{ t.type.value }}</td>
         <td>{{ t.status.value }}</td>
         <td>{{ t.maxParticipants }}</td>
-        <td><a href="{{ path("admin_tournament_detail", {id: t.id}) }}" class="btn" style="background: #1a5c1a">Voir</a></td>
+        <td>
+          <a href="{{ path("admin_tournament_detail", {id: t.id}) }}" class="btn" style="background: #1a5c1a">Voir</a>
+          {% if t.status.value == 'PUBLISHED' %}
+            <a href="{{ path('admin_registration_export', {tournament: t.id}) }}"
+               class="btn" style="background:#1A2B6D;margin-left:.3rem">Exporter inscriptions</a>
+          {% endif %}
+        </td>
       </tr>
     {% else %}
       <tr><td colspan="6">Aucun tournoi actif.</td></tr>

@@ -10,11 +10,20 @@ use App\Registration\Application\Command\DeleteRegistrationCommand;
 use App\Registration\Application\Command\DeleteRegistrationHandler;
 use App\Registration\Application\Command\ResetRegistrationCommand;
 use App\Registration\Application\Command\ResetRegistrationHandler;
+use App\Registration\Domain\Registration;
 use App\Registration\Domain\RegistrationRepository;
+use App\Registration\Domain\RegistrationStatus;
+use App\Shared\Domain\ValueObject\Uuid;
 use App\Tournament\Domain\TournamentRepository;
+use App\Tournament\Domain\TournamentStatus;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -22,6 +31,84 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_ADMIN')]
 final class RegistrationController extends AbstractController
 {
+    private const EXPORT_STATUSES = [
+        RegistrationStatus::CONFIRMED,
+        RegistrationStatus::PENDING,
+        RegistrationStatus::WAITING_LIST,
+    ];
+
+    #[Route('/export', name: 'admin_registration_export', methods: ['GET'])]
+    public function export(Request $request, RegistrationRepository $repo, TournamentRepository $tournamentRepository): Response
+    {
+        $tournamentParam = $request->query->get('tournament', 'all');
+        $spreadsheet = new Spreadsheet();
+        $spreadsheet->removeSheetByIndex(0);
+
+        if ($tournamentParam !== 'all' && $tournamentParam !== '') {
+            $tournament = $tournamentRepository->get(Uuid::fromString($tournamentParam));
+            if ($tournament === null || $tournament->status() !== TournamentStatus::PUBLISHED) {
+                throw $this->createNotFoundException('Tournoi introuvable ou non ouvert.');
+            }
+            $registrations = array_values(array_filter(
+                $repo->byTournament($tournament->id()),
+                fn(Registration $registration) => in_array($registration->status(), self::EXPORT_STATUSES, true)
+            ));
+            $sheet = $spreadsheet->createSheet();
+            $sheet->setTitle(mb_substr($tournament->name(), 0, 31));
+            $this->fillSheet($sheet, $registrations);
+            $filename = 'inscriptions-' . preg_replace('/[^a-z0-9-]/i', '-', $tournament->name()) . '.xlsx';
+        } else {
+            $tournaments = $tournamentRepository->published();
+            if (empty($tournaments)) {
+                $sheet = $spreadsheet->createSheet();
+                $sheet->setTitle('Aucun tournoi');
+                $sheet->setCellValue('A1', 'Aucun tournoi ouvert.');
+            }
+            foreach ($tournaments as $tournament) {
+                $registrations = array_values(array_filter(
+                    $repo->byTournament($tournament->id()),
+                    fn(Registration $registration) => in_array($registration->status(), self::EXPORT_STATUSES, true)
+                ));
+                $sheet = $spreadsheet->createSheet();
+                $sheet->setTitle(mb_substr($tournament->name(), 0, 31));
+                $this->fillSheet($sheet, $registrations);
+            }
+            $filename = 'inscriptions-' . (new \DateTimeImmutable())->format('Y-m-d') . '.xlsx';
+        }
+
+        $spreadsheet->setActiveSheetIndex(0);
+
+        $response = new StreamedResponse(function () use ($spreadsheet): void {
+            (new Xlsx($spreadsheet))->save('php://output');
+        });
+        $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        $response->headers->set('Content-Disposition', HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $filename));
+        $response->headers->set('Cache-Control', 'max-age=0');
+
+        return $response;
+    }
+
+    /** @param Registration[] $registrations */
+    private function fillSheet(Worksheet $sheet, array $registrations): void
+    {
+        $headers = ['Nom', 'Prénom', 'Téléphone', 'Email', 'Statut', 'Date d\'inscription'];
+        $sheet->fromArray([$headers], null, 'A1');
+        $sheet->getStyle('A1:F1')->getFont()->setBold(true);
+
+        $rowIndex = 2;
+        foreach ($registrations as $registration) {
+            $sheet->fromArray([[
+                $registration->lastName(),
+                $registration->firstName(),
+                (string) $registration->phone(),
+                $registration->email() ? (string) $registration->email() : '',
+                $registration->status()->value,
+                $registration->registeredAt()->format('d/m/Y H:i'),
+            ]], null, 'A' . $rowIndex);
+            $rowIndex++;
+        }
+    }
+
     #[Route('', name: 'admin_registration_list', methods: ['GET'])]
     public function list(Request $request, RegistrationRepository $repo, TournamentRepository $tournamentRepository): Response
     {
